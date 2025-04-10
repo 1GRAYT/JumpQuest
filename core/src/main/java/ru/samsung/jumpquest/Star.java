@@ -7,7 +7,6 @@ public class Star extends Object {
     public float realHeight;
     public int price;
     public int phase, nPhases = 8;
-    public boolean isDestroyed = false;
     public boolean isDead;
     private long timeLastPhase, timePhaseInterval = 50;
 
