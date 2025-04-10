@@ -62,6 +62,7 @@ public class ScreenGame implements Screen {
     private long timeLastScore, timeIntervalScore = 200;
     private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
     private long timeLastSpeedUp, timeIntervalSpeedUp = 100;
+    private long timeLastPhaseStar, timePhaseIntervalStar = 50;
     public float speedMultiply;
 
 
@@ -147,6 +148,7 @@ public class ScreenGame implements Screen {
         }
         for (Star s:stars) {
             batch.draw(imgStars[s.type], s.scrX(), s.scrY(), s.width, s.height);
+            if(s.isDestroyed)changePhaseOfStar(s);
         }
         for(int i = stars.size()-1; i >= 0; i--) {
             stars.get(i).move();
@@ -155,7 +157,7 @@ public class ScreenGame implements Screen {
             }
             if(stars.get(i).overlap(john)) {
                 score += stars.get(i).price;
-                stars.get(i).changePhase();
+                stars.get(i).isDestroyed = true;
                 starSound.play();
                 stars.remove(i);
             }
@@ -275,6 +277,17 @@ public class ScreenGame implements Screen {
         if(TimeUtils.millis()>timeLastSpawnGround+timeIntervalSpawnGround && !isGameOver) {
             grounds.add(new Ground(1600, 0));
             timeLastSpawnGround = TimeUtils.millis();
+        }
+    }
+
+    private void changePhaseOfStar(Star s){
+        if(TimeUtils.millis()>timeLastPhaseStar+timePhaseIntervalStar && !isGameOver) {
+            if(s.phase!=s.nPhases-1) s.phase++;
+            else {
+                s.isDead = true;
+                s.phase = s.nPhases-1;
+            }
+            timeLastPhaseStar = TimeUtils.millis();
         }
     }
 

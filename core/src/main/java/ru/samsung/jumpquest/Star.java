@@ -7,6 +7,7 @@ public class Star extends Object {
     public float realHeight;
     public int price;
     public int phase, nPhases = 8;
+    public boolean isDestroyed = false;
     public boolean isDead;
     private long timeLastPhase, timePhaseInterval = 50;
 
@@ -26,7 +27,7 @@ public class Star extends Object {
         }
     }
 
-    public void changePhase() {
+   /* public void changePhase() {
         if (TimeUtils.millis() > timeLastPhase + timePhaseInterval) {
             if (++phase == nPhases) {
                 isDead = true;
@@ -35,7 +36,7 @@ public class Star extends Object {
             timeLastPhase = TimeUtils.millis();
         }
 
-    }
+    }*/
 
     public boolean outOfScreen() {
         return x < -width/2;
