@@ -127,7 +127,7 @@ public class ScreenGame implements Screen {
         }
 
         //события
-        //
+        //dfg
         for(Sky s:sky) s.move();
         spawnGround();
         spawnStar();
