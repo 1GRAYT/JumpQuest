@@ -41,6 +41,7 @@ public class ScreenGame implements Screen {
 
     Texture[] imgJohn = new Texture[2];
     Texture[] imgGrounds = new Texture[4];
+    Texture[] imgStars = new Texture[8];
 
     SpaceButton btnBack;
 
@@ -49,6 +50,7 @@ public class ScreenGame implements Screen {
     public Sound jumpSound;
 
     List<Ground> grounds = new ArrayList<>();
+    List<Star> stars = new ArrayList<>();
     Sky[] sky = new Sky[2];
 
     public int score = 0;
@@ -82,8 +84,12 @@ public class ScreenGame implements Screen {
         }
         for (int i = 1; i < imgGrounds.length; i++) {
             imgGrounds[i] = new Texture(groundFile(i));
-            System.out.println("ground"+Integer.toString(i)+".png");
         }
+        for (int i = 0; i < imgStars.length; i++) {
+            imgStars[i] = new Texture(starFile(i+1));
+            System.out.println(starFile(i+1));
+        }
+
 
         btnBack = new SpaceButton(font, "X", 850, 1580);
 
@@ -118,6 +124,7 @@ public class ScreenGame implements Screen {
         //события
         for(Sky s:sky) s.move();
         spawnGround();
+        spawnStar();
         score();
         for(Ground g:grounds) g.move();
         john.move();
@@ -132,7 +139,20 @@ public class ScreenGame implements Screen {
         font.draw(batch, Integer.toString(score), 100, 1500);
         for (Ground g:grounds) {
             batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
-            System.out.println(g.type);
+        }
+        for (Star s:stars) {
+            batch.draw(imgStars[s.type], s.scrX(), s.scrY(), s.width, s.height);
+        }
+        for(int i = stars.size()-1; i >= 0; i--) {
+            stars.get(i).move();
+            if(stars.get(i).outOfScreen()) {
+                stars.remove(i);
+            }
+            if(stars.get(i).overlap(john)) {
+                score += stars.get(i).price;
+                stars.get(i).changePhase();
+                stars.remove(i);
+            }
         }
         for (Ground g:grounds) {
             switch(g.type) {
@@ -251,6 +271,13 @@ public class ScreenGame implements Screen {
         }
     }
 
+    private void spawnStar(){
+        if(TimeUtils.millis()>timeLastSpawnStar+timeIntervalSpawnStar && !isGameOver) {
+            stars.add(new Star(1600, 1000));
+            timeLastSpawnStar = TimeUtils.millis();
+        }
+    }
+
     private void score(){
         if(TimeUtils.millis()>timeLastScore+timeIntervalScore && !isGameOver) {
             score++;
@@ -261,6 +288,10 @@ public class ScreenGame implements Screen {
 
     private String groundFile(int number) {
         return "ground"+Integer.toString(number)+".png";
+    }
+
+    private String starFile(int number) {
+        return "star"+Integer.toString(number)+".png";
     }
 
     class JumpQuestInputProcessor implements InputProcessor {
