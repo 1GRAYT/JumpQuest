@@ -56,6 +56,7 @@ public class ScreenStore implements Screen {
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, "Store", 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, "Score: " + Integer.toString(main.allScore), 100, 1500);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         batch.end();
 

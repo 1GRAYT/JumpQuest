@@ -21,6 +21,8 @@ public class Main extends Game {
     public Vector3 touch;
     public BitmapFont font;
 
+    public int allScore = 0;
+
     public ScreenMenu screenMenu;
     public ScreenGame screenGame;
     public ScreenSettings screenSettings;

@@ -50,9 +50,13 @@ public class ScreenGame implements Screen {
     List<Ground> grounds = new ArrayList<>();
     Sky[] sky = new Sky[2];
 
+    public int score = 0;
+
     private long timeLastSpawnGround, timeIntervalSpawnGround = 1000;
     public static boolean isGameOver = false;
     private boolean hasGameOverMusicPlayed = false;
+    private long timeLastScore, timeIntervalScore = 200;
+    private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
 
 
     public ScreenGame(Main main) {
@@ -113,6 +117,7 @@ public class ScreenGame implements Screen {
         //события
         for(Sky s:sky) s.move();
         spawnGround();
+        score();
         for(Ground g:grounds) g.move();
         john.move();
 
@@ -123,6 +128,7 @@ public class ScreenGame implements Screen {
         for(int i = 0; i < sky.length; i++) {
             batch.draw(i==0?imgBG:imgBG2, sky[i].x, sky[i].y, sky[i].width, sky[i].height);
         }
+        font.draw(batch, Integer.toString(score), 100, 1500);
         for (Ground g:grounds) {
             batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
             System.out.println(g.type);
@@ -219,6 +225,7 @@ public class ScreenGame implements Screen {
         grounds.add(new Ground(300, 0));
         grounds.add(new Ground(900, 0));
         defaultMusic.play();
+        score = 0;
         hasGameOverMusicPlayed = false;
     }
 
@@ -228,8 +235,10 @@ public class ScreenGame implements Screen {
         defaultMusic.stop();
         if(!hasGameOverMusicPlayed) {
             gameOverMusic.play();
+            main.allScore += score;
             hasGameOverMusicPlayed = true;
         }
+
     font.draw(batch, "Game Over!", 0, SCR_HEIGHT/2, SCR_WIDTH, Align.center, true);
     }
 
@@ -239,6 +248,14 @@ public class ScreenGame implements Screen {
             timeLastSpawnGround = TimeUtils.millis();
         }
     }
+
+    private void score(){
+        if(TimeUtils.millis()>timeLastScore+timeIntervalScore && !isGameOver) {
+            score++;
+            timeLastScore = TimeUtils.millis();
+        }
+    }
+
 
     private String groundFile(int number) {
         return "ground"+Integer.toString(number)+".png";
