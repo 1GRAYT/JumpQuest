@@ -4,6 +4,7 @@ import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -48,7 +49,7 @@ public class ScreenMenu implements Screen {
 
     @Override
     public void show() {
-
+        loadAllScore();
     }
 
     @Override
@@ -116,5 +117,17 @@ public class ScreenMenu implements Screen {
     public void dispose() {
         imgBG.dispose();
 
+    }
+
+
+    private void loadAllScore() {
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestAllScore");
+        main.allScore = prefs.getInteger("allScore", 0);
+    }
+
+    public void saveAllScore() {
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestAllScore");
+        prefs.putInteger("allScore", main.allScore);
+        prefs.flush();
     }
 }

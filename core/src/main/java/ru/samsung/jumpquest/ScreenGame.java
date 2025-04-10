@@ -5,6 +5,7 @@ import static ru.samsung.jumpquest.Main.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -236,6 +237,7 @@ public class ScreenGame implements Screen {
         if(!hasGameOverMusicPlayed) {
             gameOverMusic.play();
             main.allScore += score;
+            main.screenMenu.saveAllScore();
             hasGameOverMusicPlayed = true;
         }
 
