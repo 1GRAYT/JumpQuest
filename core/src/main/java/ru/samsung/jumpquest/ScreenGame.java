@@ -132,6 +132,18 @@ public class ScreenGame implements Screen {
         spawnStar();
         score();
         for(Ground g:grounds) g.move();
+        for(Star s:stars) s.move();
+        for(int i = stars.size()-1; i >= 0; i--) {
+            if(stars.get(i).outOfScreen()) {
+                stars.remove(i);
+                break;
+            }
+            if(stars.get(i).overlap(john)) {
+                score += stars.get(i).price;
+                starSound.play();
+                stars.remove(i);
+            }
+        }
         john.move();
 
         //отрисовка
@@ -147,18 +159,8 @@ public class ScreenGame implements Screen {
         }
         for (Star s:stars) {
             batch.draw(imgStars[s.type], s.scrX(), s.scrY(), s.width, s.height);
-            s.move();
         }
-        for(int i = stars.size()-1; i >= 0; i--) {
-            if(stars.get(i).outOfScreen()) {
-                stars.remove(i);
-            }
-            if(stars.get(i).overlap(john)) {
-                score += stars.get(i).price;
-                starSound.play();
-                stars.remove(i);
-            }
-        }
+
         for (Ground g:grounds) {
             switch(g.type) {
                 case 1:
