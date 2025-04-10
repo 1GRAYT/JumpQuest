@@ -27,13 +27,14 @@ public class Star extends Object {
     }
 
     public void changePhase() {
-        if(TimeUtils.millis() > timeLastPhase + timePhaseInterval){
-            if(++phase==nPhases) {
+        if (TimeUtils.millis() > timeLastPhase + timePhaseInterval) {
+            if (++phase == nPhases) {
                 isDead = true;
-                phase = nPhases-1;
+                phase = nPhases - 1;
             }
             timeLastPhase = TimeUtils.millis();
         }
+
     }
 
     public boolean outOfScreen() {

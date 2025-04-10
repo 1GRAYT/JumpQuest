@@ -48,6 +48,7 @@ public class ScreenGame implements Screen {
     private Music defaultMusic;
     private Music gameOverMusic;
     public Sound jumpSound;
+    public Sound starSound;
 
     List<Ground> grounds = new ArrayList<>();
     List<Star> stars = new ArrayList<>();
@@ -60,6 +61,8 @@ public class ScreenGame implements Screen {
     private boolean hasGameOverMusicPlayed = false;
     private long timeLastScore, timeIntervalScore = 200;
     private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
+    private long timeLastSpeedUp, timeIntervalSpeedUp = 100;
+    public float speedMultiply;
 
 
     public ScreenGame(Main main) {
@@ -96,6 +99,7 @@ public class ScreenGame implements Screen {
         defaultMusic = Gdx.audio.newMusic(Gdx.files.internal("defaultmusic.mp3"));
         gameOverMusic = Gdx.audio.newMusic(Gdx.files.internal("overmusic.mp3"));
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jumpsound.mp3"));
+        starSound = Gdx.audio.newSound(Gdx.files.internal("soundstar.mp3"));
 
         sky[0] = new Sky(0, 0);
         sky[1] = new Sky(SCR_WIDTH, 0);
@@ -125,6 +129,7 @@ public class ScreenGame implements Screen {
         for(Sky s:sky) s.move();
         spawnGround();
         spawnStar();
+        speedUp();
         score();
         for(Ground g:grounds) g.move();
         john.move();
@@ -151,6 +156,7 @@ public class ScreenGame implements Screen {
             if(stars.get(i).overlap(john)) {
                 score += stars.get(i).price;
                 stars.get(i).changePhase();
+                starSound.play();
                 stars.remove(i);
             }
         }
@@ -242,6 +248,7 @@ public class ScreenGame implements Screen {
     private void gameStart() {
         john = new John(300, 500);
         grounds.clear();
+        stars.clear();
         isGameOver = false;
         grounds.add(new Ground(300, 0));
         grounds.add(new Ground(900, 0));
@@ -275,6 +282,15 @@ public class ScreenGame implements Screen {
         if(TimeUtils.millis()>timeLastSpawnStar+timeIntervalSpawnStar && !isGameOver) {
             stars.add(new Star(1600, 1000));
             timeLastSpawnStar = TimeUtils.millis();
+        }
+    }
+
+    private void speedUp(){
+        if(TimeUtils.millis()>timeLastSpeedUp+timeIntervalSpeedUp && !isGameOver) {
+            speedMultiply += 0.01;
+            timeLastSpeedUp = TimeUtils.millis();
+        } else if(isGameOver) {
+            speedMultiply = 0;
         }
     }
 
