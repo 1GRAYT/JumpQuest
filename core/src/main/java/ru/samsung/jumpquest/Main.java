@@ -31,6 +31,8 @@ public class Main extends Game {
     public ScreenAbout screenAbout;
     public ScreenStore screenStore;
 
+    public Player player;
+
 
     @Override
     public void create() {
@@ -39,6 +41,8 @@ public class Main extends Game {
         camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
         touch = new Vector3();
         font = new BitmapFont(Gdx.files.internal("Fonts/stylo70.fnt"));
+
+        player = new Player();
 
         screenMenu = new ScreenMenu(this);
         screenGame = new ScreenGame(this);

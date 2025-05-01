@@ -54,7 +54,7 @@ public class ScreenGame implements Screen {
     List<Star> stars = new ArrayList<>();
     Sky[] sky = new Sky[2];
 
-    public int score = 0;
+    //public int score = 0;
 
     private long timeLastSpawnGround, timeIntervalSpawnGround = 1000;
     public static boolean isGameOver = false;
@@ -64,6 +64,8 @@ public class ScreenGame implements Screen {
     private long timeLastSpeedUp, timeIntervalSpeedUp = 100;
     private long timeLastPhaseStar, timePhaseIntervalStar = 50;
     public float speedMultiply;
+
+    public Player[] players = new Player[10];
 
 
     public ScreenGame(Main main) {
@@ -104,6 +106,12 @@ public class ScreenGame implements Screen {
 
         sky[0] = new Sky(0, 0);
         sky[1] = new Sky(SCR_WIDTH, 0);
+
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new Player();
+        }
+
+        loadTableOfRecords();
     }
 
     @Override
@@ -140,28 +148,12 @@ public class ScreenGame implements Screen {
                 break;
             }
             if(stars.get(i).overlap(john)) {
-                score += stars.get(i).price;
+                main.player.score += stars.get(i).price;
                 starSound.play();
                 stars.remove(i);
             }
         }
         john.move();
-
-        //отрисовка
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-        for(int i = 0; i < sky.length; i++) {
-            batch.draw(i==0?imgBG:imgBG2, sky[i].x, sky[i].y, sky[i].width, sky[i].height);
-        }
-        font.draw(batch, Integer.toString(score), 100, 1500);
-        for (Ground g:grounds) {
-            batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
-        }
-        for (Star s:stars) {
-            batch.draw(imgStars[s.type], s.scrX(), s.scrY(), s.width, s.height);
-        }
-
         for (Ground g:grounds) {
             switch(g.type) {
                 case 1:
@@ -190,6 +182,23 @@ public class ScreenGame implements Screen {
                 grounds.remove(i);
             }
         }
+
+        //отрисовка
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        for(int i = 0; i < sky.length; i++) {
+            batch.draw(i==0?imgBG:imgBG2, sky[i].x, sky[i].y, sky[i].width, sky[i].height);
+        }
+        font.draw(batch, Integer.toString(main.player.score), 100, 1500);
+        for (Ground g:grounds) {
+            batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
+        }
+        for (Star s:stars) {
+            batch.draw(imgStars[s.type], s.scrX(), s.scrY(), s.width, s.height);
+        }
+
+
         batch.draw(imgJohn[john.phase], john.scrX(), john.scrY(), john.width, john.height);
 
         //полоса начало
@@ -212,6 +221,14 @@ public class ScreenGame implements Screen {
         batch.setColor(Color.WHITE);
 
         //полоса конец
+        if(isGameOver) {
+            font.draw(batch, "Game Over!",150, 1080);
+            font.draw(batch, "score", 400, 1080, 200, Align.right, true);
+            for (int i = 0; i < players.length; i++) {
+                font.draw(batch, players[i].name, 200, 1000 - 70 * i);
+                font.draw(batch, "" + players[i].score, 400, 1000 - 70 * i, 200, Align.right, true);
+            }
+        }
 
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         batch.end();
@@ -255,8 +272,8 @@ public class ScreenGame implements Screen {
         grounds.add(new Ground(300, 0));
         grounds.add(new Ground(900, 0));
         defaultMusic.play();
-        score = 0;
         hasGameOverMusicPlayed = false;
+        main.player.score = 0;
     }
 
     private void gameOver() {
@@ -265,12 +282,55 @@ public class ScreenGame implements Screen {
         defaultMusic.stop();
         if(!hasGameOverMusicPlayed) {
             gameOverMusic.play();
-            main.allScore += score;
+            main.allScore += main.player.score;
             main.screenMenu.saveAllScore();
             hasGameOverMusicPlayed = true;
         }
+        if(main.player.score >= players[players.length-1].score) {
+            players[players.length - 1].clone(main.player);
+            sortTableOfRecords();
+            saveTableOfRecords();
+        }
 
-    font.draw(batch, "Game Over!", 0, SCR_HEIGHT/2, SCR_WIDTH, Align.center, true);
+    //font.draw(batch, "Game Over!", 0, SCR_HEIGHT/2, SCR_WIDTH, Align.center, true);
+    }
+
+    private void sortTableOfRecords() {
+        int n = players.length;
+        for (int i = 0; i < players.length - 1; i++) {
+            for (int j = 0; j < players.length - i - 1; j++) {
+                if(players[j].score < players[j + 1].score) {
+                    Player temp = players[j];
+                    players[j] = players[j + 1];
+                    players[j + 1] = temp;
+                }
+
+            }
+        }
+    }
+
+    public void saveTableOfRecords() {
+        Preferences prefs = Gdx.app.getPreferences("SpaceInvadersLeaderBoard");
+        for (int i = 0; i < players.length; i++) {
+            prefs.putString("name"+i, players[i].name);
+            prefs.putInteger("score"+i, players[i].score);
+        }
+        prefs.flush();
+    }
+
+    public void loadTableOfRecords() {
+        Preferences prefs = Gdx.app.getPreferences("SpaceInvadersLeaderBoard");
+        for (int i = 0; i < players.length; i++) {
+            players[i].name = prefs.getString("name"+i, "Noname");
+            players[i].score = prefs.getInteger("score"+i, 0);
+        }
+    }
+    public void clearTableOfRecords() {
+        for (Player p: players) {
+            p.name = "noname";
+            p.score = 0;
+        }
+        saveTableOfRecords();
     }
 
     private void spawnGround(){
@@ -309,7 +369,7 @@ public class ScreenGame implements Screen {
 
     private void score(){
         if(TimeUtils.millis()>timeLastScore+timeIntervalScore && !isGameOver) {
-            score++;
+            main.player.score++;
             timeLastScore = TimeUtils.millis();
         }
     }
