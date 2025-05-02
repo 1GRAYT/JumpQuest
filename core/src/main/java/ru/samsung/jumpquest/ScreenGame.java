@@ -285,12 +285,13 @@ public class ScreenGame implements Screen {
             main.allScore += main.player.score;
             main.screenMenu.saveAllScore();
             hasGameOverMusicPlayed = true;
+            if(main.player.score >= players[players.length-1].score) {
+                players[players.length - 1].clone(main.player);
+                sortTableOfRecords();
+                saveTableOfRecords();
+            }
         }
-        if(main.player.score >= players[players.length-1].score) {
-            players[players.length - 1].clone(main.player);
-            sortTableOfRecords();
-            saveTableOfRecords();
-        }
+
 
     //font.draw(batch, "Game Over!", 0, SCR_HEIGHT/2, SCR_WIDTH, Align.center, true);
     }
@@ -310,7 +311,7 @@ public class ScreenGame implements Screen {
     }
 
     public void saveTableOfRecords() {
-        Preferences prefs = Gdx.app.getPreferences("SpaceInvadersLeaderBoard");
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestLeaderBoard");
         for (int i = 0; i < players.length; i++) {
             prefs.putString("name"+i, players[i].name);
             prefs.putInteger("score"+i, players[i].score);
@@ -319,7 +320,7 @@ public class ScreenGame implements Screen {
     }
 
     public void loadTableOfRecords() {
-        Preferences prefs = Gdx.app.getPreferences("SpaceInvadersLeaderBoard");
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestLeaderBoard");
         for (int i = 0; i < players.length; i++) {
             players[i].name = prefs.getString("name"+i, "Noname");
             players[i].score = prefs.getInteger("score"+i, 0);
