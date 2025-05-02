@@ -4,6 +4,7 @@ import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,8 +21,11 @@ public class ScreenSettings implements Screen {
     public Vector3 touch;
     public BitmapFont font;
 
+    private InputKeyboard keyboard;
+
     Texture imgBG;
 
+    QuestButton btnPlayerName;
     QuestButton btnBack;
 
     public ScreenSettings(Main main) {
@@ -31,8 +35,12 @@ public class ScreenSettings implements Screen {
         touch = main.touch;
         font = main.font;
 
+        keyboard = new InputKeyboard(font, SCR_WIDTH, SCR_HEIGHT, 7);
+
         imgBG = new Texture("bgsettings.png");
 
+        loadSettings();
+        btnPlayerName = new QuestButton(font, "Name: "+main.player.name, 100, 1250);
         btnBack = new QuestButton(font, "Back", 200);
     }
 
@@ -47,8 +55,20 @@ public class ScreenSettings implements Screen {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touch);
 
-            if(btnBack.hit(touch.x, touch.y)) {
-                main.setScreen(main.screenMenu);
+            if(keyboard.isKeyboardShow) {
+                if(keyboard.touch(touch)) {
+                    main.player.name = keyboard.getText();
+                    btnPlayerName.setText("Name: " + main.player.name);
+                }
+            } else {
+                if (btnPlayerName.hit(touch)) {
+                    keyboard.start();
+                }
+
+                if (btnBack.hit(touch.x, touch.y)) {
+                    saveSettings();
+                    main.setScreen(main.screenMenu);
+                }
             }
         }
 
@@ -56,7 +76,9 @@ public class ScreenSettings implements Screen {
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, "Settings", 0, 1400, SCR_WIDTH, Align.center, true);
+        btnPlayerName.font.draw(batch, btnPlayerName.text, btnPlayerName.x, btnPlayerName.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
+        keyboard.draw(batch);
         batch.end();
 
     }
@@ -85,5 +107,16 @@ public class ScreenSettings implements Screen {
     public void dispose() {
         imgBG.dispose();
 
+    }
+
+    private void loadSettings() {
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestSettings");
+        main.player.name = prefs.getString("name", "Noname");
+    }
+
+    private void saveSettings() {
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestSettings");
+        prefs.putString("name", main.player.name);
+        prefs.flush();
     }
 }

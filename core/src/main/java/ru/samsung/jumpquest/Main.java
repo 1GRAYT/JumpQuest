@@ -36,6 +36,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        Gdx.graphics.setForegroundFPS(220);
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
