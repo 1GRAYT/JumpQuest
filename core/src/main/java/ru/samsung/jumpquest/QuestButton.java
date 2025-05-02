@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector3;
 
-public class SpaceButton {
+public class QuestButton {
     BitmapFont font;
     String text;
     float x, y;
     float width, height;
 
-    public SpaceButton(BitmapFont font, String text, float x, float y) {
+    public QuestButton(BitmapFont font, String text, float x, float y) {
         this.font = font;
         this.text = text;
         this.x = x;
@@ -22,7 +22,7 @@ public class SpaceButton {
         height = glyphLayout.height;
     }
 
-    public SpaceButton(BitmapFont font, String text, float y) {
+    public QuestButton(BitmapFont font, String text, float y) {
         this.font = font;
         this.text = text;
         this.y = y;

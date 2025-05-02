@@ -1,6 +1,5 @@
 package ru.samsung.jumpquest;
 
-import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
@@ -43,7 +41,7 @@ public class ScreenGame implements Screen {
     Texture[] imgGrounds = new Texture[4];
     Texture[] imgStars = new Texture[8];
 
-    SpaceButton btnBack;
+    QuestButton btnBack;
 
     private Music defaultMusic;
     private Music gameOverMusic;
@@ -58,7 +56,7 @@ public class ScreenGame implements Screen {
 
     private long timeLastSpawnGround, timeIntervalSpawnGround = 1000;
     public static boolean isGameOver = false;
-    private boolean hasGameOverMusicPlayed = false;
+    private boolean hasGameEnded = false;
     private long timeLastScore, timeIntervalScore = 200;
     private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
     private long timeLastSpeedUp, timeIntervalSpeedUp = 100;
@@ -97,7 +95,7 @@ public class ScreenGame implements Screen {
         }
 
 
-        btnBack = new SpaceButton(font, "X", 850, 1580);
+        btnBack = new QuestButton(font, "X", 850, 1580);
 
         defaultMusic = Gdx.audio.newMusic(Gdx.files.internal("defaultmusic.mp3"));
         gameOverMusic = Gdx.audio.newMusic(Gdx.files.internal("overmusic.mp3"));
@@ -222,7 +220,11 @@ public class ScreenGame implements Screen {
 
         //полоса конец
         if(isGameOver) {
-            font.draw(batch, "Game Over!",150, 1080);
+            batch.setColor(Color.DARK_GRAY);
+            batch.draw(whitePixel, 100, 200, 700, 1050);
+            batch.setColor(Color.WHITE);
+            font.draw(batch, "Game Over!",0, 1200, SCR_WIDTH, Align.center, true);
+            font.draw(batch, "name", 170, 1080, 200, Align.right, true);
             font.draw(batch, "score", 400, 1080, 200, Align.right, true);
             for (int i = 0; i < players.length; i++) {
                 font.draw(batch, players[i].name, 200, 1000 - 70 * i);
@@ -272,7 +274,7 @@ public class ScreenGame implements Screen {
         grounds.add(new Ground(300, 0));
         grounds.add(new Ground(900, 0));
         defaultMusic.play();
-        hasGameOverMusicPlayed = false;
+        hasGameEnded = false;
         main.player.score = 0;
     }
 
@@ -280,11 +282,11 @@ public class ScreenGame implements Screen {
         isGameOver = true;
         john.isOnGround = false;
         defaultMusic.stop();
-        if(!hasGameOverMusicPlayed) {
+        if(!hasGameEnded) {
             gameOverMusic.play();
             main.allScore += main.player.score;
             main.screenMenu.saveAllScore();
-            hasGameOverMusicPlayed = true;
+            hasGameEnded = true;
             if(main.player.score >= players[players.length-1].score) {
                 players[players.length - 1].clone(main.player);
                 sortTableOfRecords();

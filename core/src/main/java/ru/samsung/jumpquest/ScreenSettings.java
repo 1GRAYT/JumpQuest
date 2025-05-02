@@ -22,7 +22,7 @@ public class ScreenSettings implements Screen {
 
     Texture imgBG;
 
-    SpaceButton btnBack;
+    QuestButton btnBack;
 
     public ScreenSettings(Main main) {
         this.main = main;
@@ -33,7 +33,7 @@ public class ScreenSettings implements Screen {
 
         imgBG = new Texture("bgsettings.png");
 
-        btnBack = new SpaceButton(font, "Back", 200);
+        btnBack = new QuestButton(font, "Back", 200);
     }
 
     @Override

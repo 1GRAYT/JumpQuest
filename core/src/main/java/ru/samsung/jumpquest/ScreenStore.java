@@ -22,7 +22,7 @@ public class ScreenStore implements Screen {
 
     Texture imgBG;
 
-    SpaceButton btnBack;
+    QuestButton btnBack;
 
     public ScreenStore(Main main) {
         this.main = main;
@@ -33,7 +33,7 @@ public class ScreenStore implements Screen {
 
         imgBG = new Texture("bgstore.png");
 
-        btnBack = new SpaceButton(font, "Back", 158);
+        btnBack = new QuestButton(font, "Back", 158);
     }
 
     @Override

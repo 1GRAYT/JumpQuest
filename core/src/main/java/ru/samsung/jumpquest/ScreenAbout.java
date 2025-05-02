@@ -22,7 +22,7 @@ public class ScreenAbout implements Screen {
 
     Texture imgBG;
 
-    SpaceButton btnBack;
+    QuestButton btnBack;
 
     public ScreenAbout(Main main) {
         this.main = main;
@@ -33,7 +33,7 @@ public class ScreenAbout implements Screen {
 
         imgBG = new Texture("bgabout.png");
 
-        btnBack = new SpaceButton(font, "Back", 158);
+        btnBack = new QuestButton(font, "Back", 158);
     }
 
     @Override
@@ -56,6 +56,7 @@ public class ScreenAbout implements Screen {
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, "About", 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, "Made by: Ilia Gumarov", 0, 1300, SCR_WIDTH, Align.center, true);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         batch.end();
 

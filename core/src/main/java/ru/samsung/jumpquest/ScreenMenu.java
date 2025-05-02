@@ -23,12 +23,12 @@ public class ScreenMenu implements Screen {
 
     Texture imgBG;
 
-    SpaceButton btnGame;
-    SpaceButton btnSettings;
-    SpaceButton btnLeaderBoard;
-    SpaceButton btnStore;
-    SpaceButton btnAbout;
-    SpaceButton btnExit;
+    QuestButton btnGame;
+    QuestButton btnSettings;
+    QuestButton btnLeaderBoard;
+    QuestButton btnStore;
+    QuestButton btnAbout;
+    QuestButton btnExit;
 
     public ScreenMenu(Main main) {
         this.main = main;
@@ -39,12 +39,12 @@ public class ScreenMenu implements Screen {
 
         imgBG = new Texture("bgmenu.png");
 
-        btnGame = new SpaceButton(font, "Play", 250, 1100);
-        btnSettings = new SpaceButton(font, "Settings", 250, 950);
-        btnLeaderBoard = new SpaceButton(font, "LeaderBoard", 250, 800);
-        btnStore = new SpaceButton(font, "Store", 250, 650);
-        btnAbout = new SpaceButton(font, "About", 250, 500);
-        btnExit = new SpaceButton(font, "Exit", 250, 350);
+        btnGame = new QuestButton(font, "Play", 250, 1100);
+        btnSettings = new QuestButton(font, "Settings", 250, 950);
+        btnLeaderBoard = new QuestButton(font, "LeaderBoard", 250, 800);
+        btnStore = new QuestButton(font, "Store", 250, 650);
+        btnAbout = new QuestButton(font, "About", 250, 500);
+        btnExit = new QuestButton(font, "Exit", 250, 350);
     }
 
     @Override
