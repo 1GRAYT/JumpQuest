@@ -36,12 +36,14 @@ public class ScreenGame implements Screen {
     Texture imgBG;
     Texture imgBG2;
     Texture whitePixel;
+    Texture heartTexture;
 
     Texture[] imgJohn = new Texture[2];
     Texture[] imgGrounds = new Texture[4];
     Texture[] imgStars = new Texture[8];
 
     QuestButton btnBack;
+    QuestButton btnUseExtraLife;
 
     private Music defaultMusic;
     private Music gameOverMusic;
@@ -62,6 +64,7 @@ public class ScreenGame implements Screen {
     private long timeLastSpeedUp, timeIntervalSpeedUp = 100;
     private long timeLastPhaseStar, timePhaseIntervalStar = 50;
     public float speedMultiply;
+    public boolean extraLife = false;
 
     public Player[] players = new Player[10];
 
@@ -83,6 +86,7 @@ public class ScreenGame implements Screen {
 
         imgBG = new Texture("bggame.png");
         imgBG2 = new Texture("bggame2.png");
+        heartTexture = new Texture("heart.png");
         for (int i = 0; i < imgJohn.length; i++) {
             imgJohn[i] = new Texture(i==0?"run3.png":"run2.png");
         }
@@ -96,6 +100,7 @@ public class ScreenGame implements Screen {
 
 
         btnBack = new QuestButton(font, "X", 850, 1580);
+        btnUseExtraLife = new QuestButton(font, "Use Extra Life", 150);
 
         defaultMusic = Gdx.audio.newMusic(Gdx.files.internal("defaultmusic.mp3"));
         gameOverMusic = Gdx.audio.newMusic(Gdx.files.internal("overmusic.mp3"));
@@ -130,10 +135,14 @@ public class ScreenGame implements Screen {
                 defaultMusic.setLooping(true);
                 defaultMusic.stop();
             }
+            if(btnUseExtraLife.hit(touch.x, touch.y)) {
+                gameStart();
+                extraLife = false;
+                main.screenStore.saveStore();
+            }
         }
 
         //события
-        //dfg
         for(Sky s:sky) s.move();
         spawnGround();
         spawnStar();
@@ -188,6 +197,7 @@ public class ScreenGame implements Screen {
         for(int i = 0; i < sky.length; i++) {
             batch.draw(i==0?imgBG:imgBG2, sky[i].x, sky[i].y, sky[i].width, sky[i].height);
         }
+        if(extraLife) batch.draw(heartTexture, 400, 1400, 100, 100);
         font.draw(batch, Integer.toString(main.player.score), 100, 1500);
         for (Ground g:grounds) {
             batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
@@ -220,15 +230,15 @@ public class ScreenGame implements Screen {
 
         //полоса конец
         if(isGameOver) {
-            batch.setColor(Color.DARK_GRAY);
-            batch.draw(whitePixel, 100, 200, 700, 1050);
-            batch.setColor(Color.WHITE);
             font.draw(batch, "Game Over!",0, 1200, SCR_WIDTH, Align.center, true);
             font.draw(batch, "name", 170, 1080, 200, Align.right, true);
             font.draw(batch, "score", 400, 1080, 200, Align.right, true);
             for (int i = 0; i < players.length; i++) {
                 font.draw(batch, players[i].name, 200, 1000 - 70 * i);
                 font.draw(batch, "" + players[i].score, 400, 1000 - 70 * i, 200, Align.right, true);
+            }
+            if(extraLife) {
+                btnUseExtraLife.font.draw(batch, btnUseExtraLife.text, btnUseExtraLife.x, btnUseExtraLife.y);
             }
         }
 
@@ -275,7 +285,7 @@ public class ScreenGame implements Screen {
         grounds.add(new Ground(900, 0));
         defaultMusic.play();
         hasGameEnded = false;
-        main.player.score = 0;
+        if(!extraLife) main.player.score = 0;
     }
 
     private void gameOver() {
@@ -293,9 +303,6 @@ public class ScreenGame implements Screen {
                 saveTableOfRecords();
             }
         }
-
-
-    //font.draw(batch, "Game Over!", 0, SCR_HEIGHT/2, SCR_WIDTH, Align.center, true);
     }
 
     private void sortTableOfRecords() {

@@ -50,6 +50,7 @@ public class ScreenMenu implements Screen {
     @Override
     public void show() {
         loadAllScore();
+        main.screenStore.loadStore();
     }
 
     @Override

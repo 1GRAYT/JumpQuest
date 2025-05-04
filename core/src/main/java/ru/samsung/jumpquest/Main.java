@@ -16,11 +16,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Main extends Game {
     public static final float SCR_WIDTH = 900;
     public static final float SCR_HEIGHT = 1600;
+    public static final int extraLifePrice = 1000;
 
     SpriteBatch batch;
     public OrthographicCamera camera;
     public Vector3 touch;
     public BitmapFont font;
+    public BitmapFont fontGray;
 
     public int allScore = 0;
 
@@ -42,6 +44,7 @@ public class Main extends Game {
         camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
         touch = new Vector3();
         font = new BitmapFont(Gdx.files.internal("Fonts/stylo70.fnt"));
+        fontGray = new BitmapFont(Gdx.files.internal("Fonts/fontgray.fnt"));
 
         player = new Player();
 
