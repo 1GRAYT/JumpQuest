@@ -26,6 +26,7 @@ public class ScreenStore implements Screen {
     Texture imgBG;
 
     QuestButton btnBuyExtraLife;
+    QuestButton btnBuyMultiplier;
     QuestButton btnBack;
 
     public ScreenStore(Main main) {
@@ -39,6 +40,7 @@ public class ScreenStore implements Screen {
         imgBG = new Texture("bgstore.png");
 
         btnBuyExtraLife = new QuestButton(fontBuy(main.screenGame.extraLife), extraLifeBought(main.screenGame.extraLife, extraLifePrice), 1200);
+        btnBuyMultiplier = new QuestButton(font, multiplierText(main.screenGame.multiplier, main.screenGame.multiplierPrice), 1050);
         btnBack = new QuestButton(font, "Back", 158);
     }
 
@@ -58,8 +60,13 @@ public class ScreenStore implements Screen {
                 main.screenGame.extraLife = true;
                 saveStore();
                 main.screenMenu.saveAllScore();
-            }
-            else if(btnBack.hit(touch.x, touch.y)) {
+            } else if(btnBuyMultiplier.hit(touch.x, touch.y) && main.allScore>=main.screenGame.multiplierPrice) {
+                main.allScore-=main.screenGame.multiplierPrice;
+                main.screenGame.multiplier+=1;
+                main.screenGame.multiplierPrice*=2;
+                saveStore();
+                main.screenMenu.saveAllScore();
+            } else if(btnBack.hit(touch.x, touch.y)) {
                 main.setScreen(main.screenMenu);
             }
         }
@@ -69,10 +76,16 @@ public class ScreenStore implements Screen {
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, "Store", 0, 1400, SCR_WIDTH, Align.center, true);
         font.draw(batch, "Score: " + Integer.toString(main.allScore), 100, 1500);
-        btnBuyExtraLife.font.draw(batch, extraLifeBought(main.screenGame.extraLife, extraLifePrice), btnBuyExtraLife.x, btnBuyExtraLife.y);
+        if(main.screenGame.extraLife) font.draw(batch, extraLifeBought(main.screenGame.extraLife, extraLifePrice), btnBuyExtraLife.x, btnBuyExtraLife.y);
+        else fontGray.draw(batch, extraLifeBought(main.screenGame.extraLife, extraLifePrice), btnBuyExtraLife.x, btnBuyExtraLife.y);
+        btnBuyMultiplier.font.draw(batch, multiplierText(main.screenGame.multiplier, main.screenGame.multiplierPrice), btnBuyMultiplier.x, btnBuyMultiplier.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         batch.end();
 
+    }
+
+    private String multiplierText(int multiplier, int price) {
+        return "Multiplier X"+multiplier+": "+price;
     }
 
     private String extraLifeBought(boolean isBought, int price) {
@@ -86,11 +99,15 @@ public class ScreenStore implements Screen {
     public void loadStore() {
         Preferences prefs = Gdx.app.getPreferences("JumpQuestStore");
         main.screenGame.extraLife = prefs.getBoolean("extralife", false);
+        main.screenGame.multiplier = prefs.getInteger("multiplier", 1);
+        main.screenGame.multiplierPrice = prefs.getInteger("multiplierPrice", 2000);
     }
 
     public void saveStore() {
         Preferences prefs = Gdx.app.getPreferences("JumpQuestStore");
         prefs.putBoolean("extralife", main.screenGame.extraLife);
+        prefs.putInteger("multiplier", main.screenGame.multiplier);
+        prefs.putInteger("multiplierPrice", main.screenGame.multiplierPrice);
         prefs.flush();
     }
 

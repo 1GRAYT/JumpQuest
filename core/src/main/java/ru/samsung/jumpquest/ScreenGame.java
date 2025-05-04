@@ -65,6 +65,8 @@ public class ScreenGame implements Screen {
     private long timeLastPhaseStar, timePhaseIntervalStar = 50;
     public float speedMultiply;
     public boolean extraLife = false;
+    private boolean extraLifeUsed = false;
+    public int multiplier = 1, multiplierPrice = 2000;
 
     public Player[] players = new Player[10];
 
@@ -136,8 +138,9 @@ public class ScreenGame implements Screen {
                 defaultMusic.stop();
             }
             if(btnUseExtraLife.hit(touch.x, touch.y)) {
-                gameStart();
                 extraLife = false;
+                extraLifeUsed = true;
+                gameStart();
                 main.screenStore.saveStore();
             }
         }
@@ -155,7 +158,7 @@ public class ScreenGame implements Screen {
                 break;
             }
             if(stars.get(i).overlap(john)) {
-                main.player.score += stars.get(i).price;
+                main.player.score += stars.get(i).price*multiplier;
                 starSound.play();
                 stars.remove(i);
             }
@@ -199,6 +202,7 @@ public class ScreenGame implements Screen {
         }
         if(extraLife) batch.draw(heartTexture, 400, 1400, 100, 100);
         font.draw(batch, Integer.toString(main.player.score), 100, 1500);
+        font.draw(batch, "X"+multiplier, 0, 1550);
         for (Ground g:grounds) {
             batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
         }
@@ -285,7 +289,8 @@ public class ScreenGame implements Screen {
         grounds.add(new Ground(900, 0));
         defaultMusic.play();
         hasGameEnded = false;
-        if(!extraLife) main.player.score = 0;
+        if(!extraLifeUsed) main.player.score = 0;
+        extraLifeUsed = false;
     }
 
     private void gameOver() {
@@ -379,7 +384,7 @@ public class ScreenGame implements Screen {
 
     private void score(){
         if(TimeUtils.millis()>timeLastScore+timeIntervalScore && !isGameOver) {
-            main.player.score++;
+            main.player.score+=multiplier;
             timeLastScore = TimeUtils.millis();
         }
     }
