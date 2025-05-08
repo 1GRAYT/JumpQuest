@@ -190,7 +190,7 @@ public class ScreenGame implements Screen {
                 case 3:
                     g.realHeight = g.height-350;
             }
-            if(john.x+john.width-30 >= g.x && john.y < g.realHeight-100) {
+            if(john.x+john.width >= g.x && john.y < g.realHeight-100) {
                 if (john.y < g.realHeight) {
                     gameOver();
                 }
