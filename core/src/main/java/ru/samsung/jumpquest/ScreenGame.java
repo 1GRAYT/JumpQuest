@@ -60,16 +60,15 @@ public class ScreenGame implements Screen {
     List<Star> stars = new ArrayList<>();
     Sky[] sky = new Sky[2];
 
-    //public int score = 0;
+    public float fixedAddedSpeed = 0;
 
     private long timeLastSpawnGround, timeIntervalSpawnGround = 1000;
     public static boolean isGameOver = false;
     private boolean hasGameEnded = false;
     private long timeLastScore, timeIntervalScore = 200;
     private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
-    private long timeLastSpeedUp, timeIntervalSpeedUp = 100;
+    private long timeLastSpeedUp, timeIntervalSpeedUp = 2000;
     private long timeLastPhaseStar, timePhaseIntervalStar = 50;
-    public float speedMultiply;
     public boolean extraLife = false;
     private boolean extraLifeUsed = false;
     public int multiplier = 1, multiplierPrice = 2000;
@@ -163,6 +162,7 @@ public class ScreenGame implements Screen {
         //события
         for(Sky s:sky) s.move();
         spawnGround();
+        //speedUp();
         spawnStar();
         score();
         for(Ground g:grounds) g.move();
@@ -403,14 +403,20 @@ public class ScreenGame implements Screen {
         }
     }
 
-    private void speedUp(){
+    /*private void speedUp(){
         if(TimeUtils.millis()>timeLastSpeedUp+timeIntervalSpeedUp && !isGameOver) {
-            speedMultiply += 0.01;
+            fixedAddedSpeed += 0.01;
+            for(Ground g: grounds) {
+                g.addedSpeed = fixedAddedSpeed;
+            }
             timeLastSpeedUp = TimeUtils.millis();
         } else if(isGameOver) {
-            speedMultiply = 0;
+            fixedAddedSpeed = 0;
+            for(Ground g: grounds) {
+                g.addedSpeed = 0;
+            }
         }
-    }
+    }*/
 
     private void score(){
         if(TimeUtils.millis()>timeLastScore+timeIntervalScore && !isGameOver) {

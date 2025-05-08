@@ -67,12 +67,14 @@ public class ScreenStore implements Screen {
                 main.screenGame.extraLife = true;
                 btnBuyExtraLife.setText(extraLifeBought(main.screenGame.extraLife, extraLifePrice));
                 btnBuyExtraLife.setFont(fontBuy(main.screenGame.extraLife));
+                loadLanguageText();
                 saveStore();
                 main.screenMenu.saveAllScore();
             } else if(btnBuyMultiplier.hit(touch.x, touch.y) && main.allScore>=main.screenGame.multiplierPrice) {
                 main.allScore-=main.screenGame.multiplierPrice;
                 main.screenGame.multiplier+=1;
                 main.screenGame.multiplierPrice*=2;
+                loadLanguageText();
                 saveStore();
                 main.screenMenu.saveAllScore();
             } else if(btnBack.hit(touch.x, touch.y)) {

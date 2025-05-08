@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class Ground extends Object {
     public int type;
     public float realHeight;
+    public float addedSpeed;
 
     public Ground(float x, float y) {
         super(x, y);
@@ -16,7 +17,7 @@ public class Ground extends Object {
     public void move() {
         super.move();
         if(!ScreenGame.isGameOver) {
-            vx -= 0.02;
+            vx -= (0.02 + addedSpeed);
         } else {
             vx = 0;
         }
