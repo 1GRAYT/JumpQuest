@@ -2,6 +2,8 @@ package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
+import static ru.samsung.jumpquest.Main.englishLanguage;
+import static ru.samsung.jumpquest.Main.russianLanguage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,6 +24,9 @@ public class ScreenLeaderBoard implements Screen {
 
     Texture imgBG;
 
+    private String LeaderBoardText;
+    private String ScoreOfBoardText;
+
     QuestButton btnClear;
     QuestButton btnBack;
     Player[] players;
@@ -32,17 +37,17 @@ public class ScreenLeaderBoard implements Screen {
         camera = main.camera;
         touch = main.touch;
         font = main.font;
-        players = main.screenGame.players;
 
         imgBG = new Texture("bglead.png");
 
         btnClear = new QuestButton(font, "Clear",300);
         btnBack = new QuestButton(font, "Back", 150);
+        players = main.screenGame.players;
     }
 
     @Override
     public void show() {
-
+        loadLanguageText();
     }
 
     @Override
@@ -63,11 +68,11 @@ public class ScreenLeaderBoard implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        font.draw(batch, "Leaderboard", 0, 1400, SCR_WIDTH, Align.center, true);
-        font.draw(batch, "score", 400, 1180, 200, Align.right, true);
+        font.draw(batch, LeaderBoardText, 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, ScoreOfBoardText, 500, 1180, 200, Align.right, true);
         for (int i = 0; i < players.length-1; i++) {
-            font.draw(batch, players[i].name, 200, 1100 - 70 * i);
-            font.draw(batch, "" + players[i].score, 400, 1100 - 70 * i, 200, Align.right, true);
+            font.draw(batch, players[i].name, 100, 1100 - 70 * i);
+            font.draw(batch, "" + players[i].score, 500, 1100 - 70 * i, 200, Align.right, true);
         }
         btnClear.font.draw(batch, btnClear.text, btnClear.x, btnClear.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
@@ -99,5 +104,20 @@ public class ScreenLeaderBoard implements Screen {
     public void dispose() {
         imgBG.dispose();
 
+    }
+
+    private void loadLanguageText() {
+        switch (main.screenSettings.language) {
+            case englishLanguage:
+                LeaderBoardText = "Leader Board";
+                ScoreOfBoardText = "score";
+                btnClear.text = "Clear";
+                btnBack.text = "Back"; break;
+            case russianLanguage:
+                LeaderBoardText = "Рекорды";
+                ScoreOfBoardText = "очки";
+                btnClear.text = "Чистка";
+                btnBack.text = "Назад";
+        }
     }
 }

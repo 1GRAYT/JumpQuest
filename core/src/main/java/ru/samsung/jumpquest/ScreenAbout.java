@@ -2,6 +2,8 @@ package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
+import static ru.samsung.jumpquest.Main.englishLanguage;
+import static ru.samsung.jumpquest.Main.russianLanguage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,6 +24,9 @@ public class ScreenAbout implements Screen {
 
     Texture imgBG;
 
+    private String AboutText;
+    private String MadeText;
+
     QuestButton btnBack;
 
     public ScreenAbout(Main main) {
@@ -38,7 +43,7 @@ public class ScreenAbout implements Screen {
 
     @Override
     public void show() {
-
+        loadLanguageText();
     }
 
     @Override
@@ -55,8 +60,8 @@ public class ScreenAbout implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        font.draw(batch, "About", 0, 1400, SCR_WIDTH, Align.center, true);
-        font.draw(batch, "Made by: Ilia Gumarov", 0, 1300, SCR_WIDTH, Align.center, true);
+        font.draw(batch, AboutText, 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, MadeText, 0, 1300, SCR_WIDTH, Align.center, true);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         batch.end();
 
@@ -86,5 +91,18 @@ public class ScreenAbout implements Screen {
     public void dispose() {
         imgBG.dispose();
 
+    }
+
+    private void loadLanguageText() {
+        switch (main.screenSettings.language) {
+            case englishLanguage:
+                AboutText = "About";
+                MadeText = "Made by Ilia Gumarov";
+                btnBack.text = "Back"; break;
+            case russianLanguage:
+                AboutText = "Об Игре";
+                MadeText = "Сделано Ильей Гумаровым";
+                btnBack.text = "Назад";
+        }
     }
 }

@@ -2,6 +2,8 @@ package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
+import static ru.samsung.jumpquest.Main.englishLanguage;
+import static ru.samsung.jumpquest.Main.russianLanguage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -20,12 +22,19 @@ public class ScreenSettings implements Screen {
     public OrthographicCamera camera;
     public Vector3 touch;
     public BitmapFont font;
+    public BitmapFont fontGray;
+
+    private String SettingsText;
+    private String LanguageText;
+    public int language;
 
     private InputKeyboard keyboard;
 
     Texture imgBG;
 
     QuestButton btnPlayerName;
+    QuestButton btnEnglish;
+    QuestButton btnRussian;
     QuestButton btnBack;
 
     public ScreenSettings(Main main) {
@@ -34,6 +43,7 @@ public class ScreenSettings implements Screen {
         camera = main.camera;
         touch = main.touch;
         font = main.font;
+        fontGray = main.fontGray;
 
         keyboard = new InputKeyboard(font, SCR_WIDTH, SCR_HEIGHT/2, 6);
 
@@ -41,12 +51,15 @@ public class ScreenSettings implements Screen {
 
         loadSettings();
         btnPlayerName = new QuestButton(font, "Name: "+main.player.name, 100, 1250);
+        btnEnglish = new QuestButton(getFont(language), "English", 150, 950);
+        btnRussian = new QuestButton(getFont(language), "Русский", 150, 800);
         btnBack = new QuestButton(font, "Back", 200);
     }
 
     @Override
     public void show() {
-
+        selectLanguage();
+        loadLanguageText();
     }
 
     @Override
@@ -65,7 +78,21 @@ public class ScreenSettings implements Screen {
                     keyboard.start();
                 }
 
-                if (btnBack.hit(touch.x, touch.y)) {
+                if(btnEnglish.hit(touch)) {
+                    language = englishLanguage;
+                    selectLanguage();
+                    loadLanguageText();
+                    saveSettings();
+                }
+
+                if(btnRussian.hit(touch)) {
+                    language = russianLanguage;
+                    selectLanguage();
+                    loadLanguageText();
+                    saveSettings();
+                }
+
+                if (btnBack.hit(touch)) {
                     saveSettings();
                     main.setScreen(main.screenMenu);
                 }
@@ -75,8 +102,11 @@ public class ScreenSettings implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        font.draw(batch, "Settings", 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, SettingsText, 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, LanguageText, 100, 1100, SCR_WIDTH, Align.left, true);
         btnPlayerName.font.draw(batch, btnPlayerName.text, btnPlayerName.x, btnPlayerName.y);
+        btnEnglish.font.draw(batch, btnEnglish.text, btnEnglish.x, btnEnglish.y);
+        btnRussian.font.draw(batch, btnRussian.text, btnRussian.x, btnRussian.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         keyboard.draw(batch);
         batch.end();
@@ -109,14 +139,44 @@ public class ScreenSettings implements Screen {
 
     }
 
-    private void loadSettings() {
-        Preferences prefs = Gdx.app.getPreferences("JumpQuestSettings");
-        main.player.name = prefs.getString("name", "Noname");
+    private void selectLanguage() {
+        btnEnglish.setFont(fontGray);
+        btnRussian.setFont(fontGray);
+        switch (language) {
+            case englishLanguage: btnEnglish.setFont(font); break;
+            case russianLanguage: btnRussian.setFont(font);
+        }
     }
 
-    private void saveSettings() {
+    private void loadLanguageText() {
+        switch (language) {
+            case englishLanguage:
+                SettingsText = "Settings";
+                LanguageText = "Language";
+                btnPlayerName.text = "Name: " + main.player.name;
+                btnBack.text = "Back";break;
+            case russianLanguage:
+                SettingsText = "Настройки";
+                LanguageText = "Язык";
+                btnPlayerName.text = "Имя: " + main.player.name;
+                btnBack.text = "Назад";
+        }
+    }
+
+    public BitmapFont getFont(int type) {
+        return (language == type)? font : fontGray;
+    }
+
+    public void loadSettings() {
+        Preferences prefs = Gdx.app.getPreferences("JumpQuestSettings");
+        main.player.name = prefs.getString("name", "Noname");
+        language = prefs.getInteger("language", englishLanguage);
+    }
+
+    public void saveSettings() {
         Preferences prefs = Gdx.app.getPreferences("JumpQuestSettings");
         prefs.putString("name", main.player.name);
+        prefs.putInteger("language", language);
         prefs.flush();
     }
 }

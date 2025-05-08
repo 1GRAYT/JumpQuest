@@ -46,7 +46,8 @@ public class ScreenStore implements Screen {
 
     @Override
     public void show() {
-
+        btnBuyExtraLife.setText(extraLifeBought(main.screenGame.extraLife, extraLifePrice));
+        btnBuyExtraLife.setFont(fontBuy(main.screenGame.extraLife));
     }
 
     @Override
@@ -58,6 +59,8 @@ public class ScreenStore implements Screen {
             if(btnBuyExtraLife.hit(touch.x, touch.y) && !main.screenGame.extraLife && main.allScore>=extraLifePrice) {
                 main.allScore-=extraLifePrice;
                 main.screenGame.extraLife = true;
+                btnBuyExtraLife.setText(extraLifeBought(main.screenGame.extraLife, extraLifePrice));
+                btnBuyExtraLife.setFont(fontBuy(main.screenGame.extraLife));
                 saveStore();
                 main.screenMenu.saveAllScore();
             } else if(btnBuyMultiplier.hit(touch.x, touch.y) && main.allScore>=main.screenGame.multiplierPrice) {
@@ -76,8 +79,7 @@ public class ScreenStore implements Screen {
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, "Store", 0, 1400, SCR_WIDTH, Align.center, true);
         font.draw(batch, "Score: " + Integer.toString(main.allScore), 100, 1500);
-        if(main.screenGame.extraLife) font.draw(batch, extraLifeBought(main.screenGame.extraLife, extraLifePrice), btnBuyExtraLife.x, btnBuyExtraLife.y);
-        else fontGray.draw(batch, extraLifeBought(main.screenGame.extraLife, extraLifePrice), btnBuyExtraLife.x, btnBuyExtraLife.y);
+        btnBuyExtraLife.font.draw(batch, btnBuyExtraLife.text, btnBuyExtraLife.x, btnBuyExtraLife.y);
         btnBuyMultiplier.font.draw(batch, multiplierText(main.screenGame.multiplier, main.screenGame.multiplierPrice), btnBuyMultiplier.x, btnBuyMultiplier.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         batch.end();

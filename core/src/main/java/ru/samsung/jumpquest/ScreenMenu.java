@@ -2,6 +2,8 @@ package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
+import static ru.samsung.jumpquest.Main.englishLanguage;
+import static ru.samsung.jumpquest.Main.russianLanguage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -49,7 +51,9 @@ public class ScreenMenu implements Screen {
 
     @Override
     public void show() {
+        loadLanguageText();
         loadAllScore();
+        main.screenSettings.loadSettings();
         main.screenStore.loadStore();
     }
 
@@ -118,6 +122,25 @@ public class ScreenMenu implements Screen {
     public void dispose() {
         imgBG.dispose();
 
+    }
+
+    private void loadLanguageText() {
+        switch (main.screenSettings.language) {
+            case englishLanguage:
+                btnGame.text = "Play";
+                btnSettings.text = "Settings";
+                btnLeaderBoard.text = "LeaderBoard";
+                btnStore.text = "Store";
+                btnAbout.text = "About";
+                btnExit.text = "Exit"; break;
+            case russianLanguage:
+                btnGame.text = "Играть";
+                btnSettings.text = "Настройки";
+                btnLeaderBoard.text = "Рекорды";
+                btnStore.text = "Магазин";
+                btnAbout.text = "Об игре";
+                btnExit.text = "Выйти";
+        }
     }
 
 
