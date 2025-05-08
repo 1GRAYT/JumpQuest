@@ -1,6 +1,8 @@
 package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
+import static ru.samsung.jumpquest.Main.englishLanguage;
+import static ru.samsung.jumpquest.Main.russianLanguage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -49,6 +51,10 @@ public class ScreenGame implements Screen {
     private Music gameOverMusic;
     public Sound jumpSound;
     public Sound starSound;
+
+    private String GameOverText;
+    private String BoardScoreText;
+    private String BoardNameText;
 
     List<Ground> grounds = new ArrayList<>();
     List<Star> stars = new ArrayList<>();
@@ -121,6 +127,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void show() {
+        loadLanguageText();
         Gdx.input.setInputProcessor(new JumpQuestInputProcessor());
         gameStart();
     }
@@ -242,9 +249,9 @@ public class ScreenGame implements Screen {
 
         //полоса конец
         if(isGameOver) {
-            font.draw(batch, "Game Over!",0, 1200, SCR_WIDTH, Align.center, true);
-            font.draw(batch, "name", 100, 1080, 200, Align.right, true);
-            font.draw(batch, "score", 500, 1080, 200, Align.right, true);
+            font.draw(batch, GameOverText,0, 1200, SCR_WIDTH, Align.center, true);
+            font.draw(batch, BoardNameText, 100, 1080, 200, Align.right, true);
+            font.draw(batch, BoardScoreText, 500, 1080, 200, Align.right, true);
             for (int i = 0; i < players.length-1; i++) {
                 font.draw(batch, players[i].name, 100, 1000 - 70 * i);
                 font.draw(batch, "" + players[i].score, 500, 1000 - 70 * i, 200, Align.right, true);
@@ -286,6 +293,21 @@ public class ScreenGame implements Screen {
             imgJohn[i].dispose();
         }
         defaultMusic.dispose();
+    }
+
+    private void loadLanguageText() {
+        switch (main.screenSettings.language) {
+            case englishLanguage:
+                GameOverText = "Game Over!";
+                BoardNameText = "Name";
+                BoardScoreText = "Score";
+                btnUseExtraLife.text = "Use Extra Life"; break;
+            case russianLanguage:
+                GameOverText = "Вы Погибли!";
+                BoardNameText = "Имя";
+                BoardScoreText = "Очки";
+                btnUseExtraLife.text = "Исп. Доп. Жизнь ";
+        }
     }
 
     private void gameStart() {

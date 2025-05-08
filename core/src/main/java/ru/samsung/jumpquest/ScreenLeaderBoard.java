@@ -25,6 +25,7 @@ public class ScreenLeaderBoard implements Screen {
     Texture imgBG;
 
     private String LeaderBoardText;
+    private String NameOfBoardText;
     private String ScoreOfBoardText;
 
     QuestButton btnClear;
@@ -69,6 +70,7 @@ public class ScreenLeaderBoard implements Screen {
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, LeaderBoardText, 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, NameOfBoardText, 100, 1180, 200, Align.right, true);
         font.draw(batch, ScoreOfBoardText, 500, 1180, 200, Align.right, true);
         for (int i = 0; i < players.length-1; i++) {
             font.draw(batch, players[i].name, 100, 1100 - 70 * i);
@@ -110,12 +112,14 @@ public class ScreenLeaderBoard implements Screen {
         switch (main.screenSettings.language) {
             case englishLanguage:
                 LeaderBoardText = "Leader Board";
-                ScoreOfBoardText = "score";
+                NameOfBoardText = "Name";
+                ScoreOfBoardText = "Score";
                 btnClear.text = "Clear";
                 btnBack.text = "Back"; break;
             case russianLanguage:
                 LeaderBoardText = "Рекорды";
-                ScoreOfBoardText = "очки";
+                NameOfBoardText = "Имя";
+                ScoreOfBoardText = "Очки";
                 btnClear.text = "Чистка";
                 btnBack.text = "Назад";
         }

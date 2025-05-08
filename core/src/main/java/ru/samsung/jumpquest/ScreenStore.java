@@ -2,7 +2,9 @@ package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.SCR_HEIGHT;
 import static ru.samsung.jumpquest.Main.SCR_WIDTH;
+import static ru.samsung.jumpquest.Main.englishLanguage;
 import static ru.samsung.jumpquest.Main.extraLifePrice;
+import static ru.samsung.jumpquest.Main.russianLanguage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -25,6 +27,9 @@ public class ScreenStore implements Screen {
 
     Texture imgBG;
 
+    public String StoreText;
+    public String AllScoreText;
+
     QuestButton btnBuyExtraLife;
     QuestButton btnBuyMultiplier;
     QuestButton btnBack;
@@ -46,6 +51,7 @@ public class ScreenStore implements Screen {
 
     @Override
     public void show() {
+        loadLanguageText();
         btnBuyExtraLife.setText(extraLifeBought(main.screenGame.extraLife, extraLifePrice));
         btnBuyExtraLife.setFont(fontBuy(main.screenGame.extraLife));
     }
@@ -77,8 +83,8 @@ public class ScreenStore implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        font.draw(batch, "Store", 0, 1400, SCR_WIDTH, Align.center, true);
-        font.draw(batch, "Score: " + Integer.toString(main.allScore), 100, 1500);
+        font.draw(batch, StoreText, 0, 1400, SCR_WIDTH, Align.center, true);
+        font.draw(batch, AllScoreText, 100, 1500);
         btnBuyExtraLife.font.draw(batch, btnBuyExtraLife.text, btnBuyExtraLife.x, btnBuyExtraLife.y);
         btnBuyMultiplier.font.draw(batch, multiplierText(main.screenGame.multiplier, main.screenGame.multiplierPrice), btnBuyMultiplier.x, btnBuyMultiplier.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
@@ -87,15 +93,28 @@ public class ScreenStore implements Screen {
     }
 
     private String multiplierText(int multiplier, int price) {
-        return "Multiplier X"+multiplier+": "+price;
+        return (main.screenSettings.language == englishLanguage ? "Multiplier X" : "Множитель X")+multiplier+": "+price;
     }
 
     private String extraLifeBought(boolean isBought, int price) {
-        return "Extra Life: " + (isBought?"Bought":price);
+        return (main.screenSettings.language == englishLanguage ? "Extra Life: " : "Доп. Жизнь: ") + (isBought?(main.screenSettings.language == englishLanguage ? "Bought" : "Куплено"):price);
     }
 
     private BitmapFont fontBuy(boolean isBought) {
         return isBought ? font : fontGray;
+    }
+
+    private void loadLanguageText() {
+        switch (main.screenSettings.language) {
+            case englishLanguage:
+                StoreText = "Store";
+                AllScoreText = "Score: " + Integer.toString(main.allScore);
+                btnBack.text = "Back"; break;
+            case russianLanguage:
+                StoreText = "Магазин";
+                AllScoreText = "Очки: " + Integer.toString(main.allScore);
+                btnBack.text = "Назад";
+        }
     }
 
     public void loadStore() {
