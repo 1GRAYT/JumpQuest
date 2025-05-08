@@ -65,7 +65,7 @@ public class ScreenLeaderBoard implements Screen {
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         font.draw(batch, "Leaderboard", 0, 1400, SCR_WIDTH, Align.center, true);
         font.draw(batch, "score", 400, 1180, 200, Align.right, true);
-        for (int i = 0; i < players.length; i++) {
+        for (int i = 0; i < players.length-1; i++) {
             font.draw(batch, players[i].name, 200, 1100 - 70 * i);
             font.draw(batch, "" + players[i].score, 400, 1100 - 70 * i, 200, Align.right, true);
         }

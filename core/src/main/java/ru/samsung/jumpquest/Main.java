@@ -43,8 +43,8 @@ public class Main extends Game {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
         touch = new Vector3();
-        font = new BitmapFont(Gdx.files.internal("Fonts/stylo70.fnt"));
-        fontGray = new BitmapFont(Gdx.files.internal("Fonts/fontgray.fnt"));
+        font = new BitmapFont(Gdx.files.internal("Fonts/whiteFont.fnt"));
+        fontGray = new BitmapFont(Gdx.files.internal("Fonts/grayFont.fnt"));
 
         player = new Player();
 

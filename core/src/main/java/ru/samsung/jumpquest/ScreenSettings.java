@@ -35,7 +35,7 @@ public class ScreenSettings implements Screen {
         touch = main.touch;
         font = main.font;
 
-        keyboard = new InputKeyboard(font, SCR_WIDTH, SCR_HEIGHT, 7);
+        keyboard = new InputKeyboard(font, SCR_WIDTH, SCR_HEIGHT/2, 6);
 
         imgBG = new Texture("bgsettings.png");
 

@@ -68,7 +68,7 @@ public class ScreenGame implements Screen {
     private boolean extraLifeUsed = false;
     public int multiplier = 1, multiplierPrice = 2000;
 
-    public Player[] players = new Player[10];
+    public Player[] players = new Player[11];
 
 
     public ScreenGame(Main main) {
@@ -138,6 +138,14 @@ public class ScreenGame implements Screen {
                 defaultMusic.stop();
             }
             if(btnUseExtraLife.hit(touch.x, touch.y)) {
+                for(Player p:players) {
+                    if(p.score == main.player.score && p.name == main.player.name) {
+                        p.score = 0;
+                        p.name = "noname";
+                        sortTableOfRecords();
+                        saveTableOfRecords();
+                    }
+                }
                 extraLife = false;
                 extraLifeUsed = true;
                 gameStart();
@@ -202,7 +210,7 @@ public class ScreenGame implements Screen {
         }
         if(extraLife) batch.draw(heartTexture, 400, 1400, 100, 100);
         font.draw(batch, Integer.toString(main.player.score), 100, 1500);
-        font.draw(batch, "X"+multiplier, 0, 1550);
+        if(!extraLifeUsed) font.draw(batch, "X"+multiplier, 0, 1550);
         for (Ground g:grounds) {
             batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
         }
@@ -235,11 +243,11 @@ public class ScreenGame implements Screen {
         //полоса конец
         if(isGameOver) {
             font.draw(batch, "Game Over!",0, 1200, SCR_WIDTH, Align.center, true);
-            font.draw(batch, "name", 170, 1080, 200, Align.right, true);
-            font.draw(batch, "score", 400, 1080, 200, Align.right, true);
-            for (int i = 0; i < players.length; i++) {
-                font.draw(batch, players[i].name, 200, 1000 - 70 * i);
-                font.draw(batch, "" + players[i].score, 400, 1000 - 70 * i, 200, Align.right, true);
+            font.draw(batch, "name", 100, 1080, 200, Align.right, true);
+            font.draw(batch, "score", 500, 1080, 200, Align.right, true);
+            for (int i = 0; i < players.length-1; i++) {
+                font.draw(batch, players[i].name, 100, 1000 - 70 * i);
+                font.draw(batch, "" + players[i].score, 500, 1000 - 70 * i, 200, Align.right, true);
             }
             if(extraLife) {
                 btnUseExtraLife.font.draw(batch, btnUseExtraLife.text, btnUseExtraLife.x, btnUseExtraLife.y);
