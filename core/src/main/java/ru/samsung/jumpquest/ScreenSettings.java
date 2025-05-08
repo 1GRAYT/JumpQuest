@@ -72,6 +72,7 @@ public class ScreenSettings implements Screen {
                 if(keyboard.touch(touch)) {
                     main.player.name = keyboard.getText();
                     btnPlayerName.setText("Name: " + main.player.name);
+                    loadLanguageText();
                 }
             } else {
                 if (btnPlayerName.hit(touch)) {
