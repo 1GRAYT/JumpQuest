@@ -98,11 +98,11 @@ public class ScreenAbout implements Screen {
             case englishLanguage:
                 AboutText = "About";
                 MadeText = "Made by Ilia Gumarov";
-                btnBack.text = "Back"; break;
+                btnBack = new QuestButton(font, "Back", 158); break;
             case russianLanguage:
                 AboutText = "Об Игре";
                 MadeText = "Сделано Ильей Гумаровым";
-                btnBack.text = "Назад";
+                btnBack = new QuestButton(font, "Назад", 158);
         }
     }
 }

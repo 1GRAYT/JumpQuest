@@ -127,19 +127,19 @@ public class ScreenMenu implements Screen {
     private void loadLanguageText() {
         switch (main.screenSettings.language) {
             case englishLanguage:
-                btnGame.text = "Play";
-                btnSettings.text = "Settings";
-                btnLeaderBoard.text = "LeaderBoard";
-                btnStore.text = "Store";
-                btnAbout.text = "About";
-                btnExit.text = "Exit"; break;
+                btnGame.setText("Play");
+                btnSettings.setText("Settings");
+                btnLeaderBoard.setText("LeaderBoard");
+                btnStore.setText("Store");
+                btnAbout.setText("About");
+                btnExit.setText("Exit"); break;
             case russianLanguage:
-                btnGame.text = "Играть";
-                btnSettings.text = "Настройки";
-                btnLeaderBoard.text = "Рекорды";
-                btnStore.text = "Магазин";
-                btnAbout.text = "Об игре";
-                btnExit.text = "Выйти";
+                btnGame.setText("Играть");
+                btnSettings.setText("Настройки");
+                btnLeaderBoard.setText("Рекорды");
+                btnStore.setText("Магазин");
+                btnAbout.setText("Об Игре");
+                btnExit.setText("Выйти");
         }
     }
 

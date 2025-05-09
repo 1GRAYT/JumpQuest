@@ -17,7 +17,10 @@ public class Main extends Game {
     public static final float SCR_WIDTH = 900;
     public static final float SCR_HEIGHT = 1600;
     public static final int englishLanguage = 0, russianLanguage = 1;
+    public static final int summerType = 0, winterType = 1;
     public static final int extraLifePrice = 1000;
+    public static final int summerPrice = 1000;
+    public static final int winterPrice = 2000;
 
     SpriteBatch batch;
     public OrthographicCamera camera;

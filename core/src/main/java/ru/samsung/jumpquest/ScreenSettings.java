@@ -154,13 +154,13 @@ public class ScreenSettings implements Screen {
             case englishLanguage:
                 SettingsText = "Settings";
                 LanguageText = "Language";
-                btnPlayerName.text = "Name: " + main.player.name;
-                btnBack.text = "Back";break;
+                btnPlayerName.setText("Name: " + main.player.name);
+                btnBack = new QuestButton(font, "Back", 200);break;
             case russianLanguage:
                 SettingsText = "Настройки";
                 LanguageText = "Язык";
-                btnPlayerName.text = "Имя: " + main.player.name;
-                btnBack.text = "Назад";
+                btnPlayerName.setText("Имя: " + main.player.name);
+                btnBack = new QuestButton(font, "Назад", 200);
         }
     }
 

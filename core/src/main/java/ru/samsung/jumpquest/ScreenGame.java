@@ -37,12 +37,12 @@ public class ScreenGame implements Screen {
 
     Texture imgBG;
     Texture imgBG2;
+    Texture imgStar;
     Texture whitePixel;
     Texture heartTexture;
 
     Texture[] imgJohn = new Texture[2];
     Texture[] imgGrounds = new Texture[4];
-    Texture[] imgStars = new Texture[8];
 
     QuestButton btnBack;
     QuestButton btnUseExtraLife;
@@ -61,6 +61,7 @@ public class ScreenGame implements Screen {
     Sky[] sky = new Sky[2];
 
     public float fixedAddedSpeed = 0;
+    public int typeOfWeather;
 
     private long timeLastSpawnGround, timeIntervalSpawnGround = 1000;
     public static boolean isGameOver = false;
@@ -68,7 +69,6 @@ public class ScreenGame implements Screen {
     private long timeLastScore, timeIntervalScore = 200;
     private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
     private long timeLastSpeedUp, timeIntervalSpeedUp = 2000;
-    private long timeLastPhaseStar, timePhaseIntervalStar = 50;
     public boolean extraLife = false;
     private boolean extraLifeUsed = false;
     public int multiplier = 1, multiplierPrice = 2000;
@@ -91,20 +91,11 @@ public class ScreenGame implements Screen {
 
         whitePixel = new Texture(pixmap);
 
-        imgBG = new Texture("bggame.png");
-        imgBG2 = new Texture("bggame2.png");
+        imgStar = new Texture("star1.png");
         heartTexture = new Texture("heart.png");
         for (int i = 0; i < imgJohn.length; i++) {
             imgJohn[i] = new Texture(i==0?"run3.png":"run2.png");
         }
-        for (int i = 1; i < imgGrounds.length; i++) {
-            imgGrounds[i] = new Texture(groundFile(i));
-        }
-        for (int i = 0; i < imgStars.length; i++) {
-            imgStars[i] = new Texture(starFile(i+1));
-            System.out.println(starFile(i+1));
-        }
-
 
         btnBack = new QuestButton(font, "X", 850, 1580);
         btnUseExtraLife = new QuestButton(font, "Use Extra Life", 150);
@@ -126,6 +117,11 @@ public class ScreenGame implements Screen {
 
     @Override
     public void show() {
+        imgBG = new Texture("bggame1type"+ typeOfWeather +".png");
+        imgBG2 = new Texture("bggame2type"+ typeOfWeather +".png");
+        for (int i = 1; i < imgGrounds.length; i++) {
+            imgGrounds[i] = new Texture(groundFile(i, typeOfWeather));
+        }
         loadLanguageText();
         Gdx.input.setInputProcessor(new JumpQuestInputProcessor());
         gameStart();
@@ -133,6 +129,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void render(float delta) {
+        System.out.println(typeOfWeather);
         //касания
         if(Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -143,7 +140,7 @@ public class ScreenGame implements Screen {
                 defaultMusic.setLooping(true);
                 defaultMusic.stop();
             }
-            if(btnUseExtraLife.hit(touch.x, touch.y)) {
+            if(btnUseExtraLife.hit(touch.x, touch.y) && extraLife && isGameOver) {
                 for(Player p:players) {
                     if(p.score == main.player.score && p.name == main.player.name) {
                         p.score = 0;
@@ -222,7 +219,7 @@ public class ScreenGame implements Screen {
             batch.draw(imgGrounds[g.type], g.scrX(), g.scrY(), g.width, g.height);
         }
         for (Star s:stars) {
-            batch.draw(imgStars[s.type], s.scrX(), s.scrY(), s.width, s.height);
+            batch.draw(imgStar, s.scrX(), s.scrY(), s.width, s.height);
         }
 
 
@@ -301,12 +298,12 @@ public class ScreenGame implements Screen {
                 GameOverText = "Game Over!";
                 BoardNameText = "Name";
                 BoardScoreText = "Score";
-                btnUseExtraLife.text = "Use Extra Life"; break;
+                btnUseExtraLife = new QuestButton(font, "Use Extra Life", 150); break;
             case russianLanguage:
                 GameOverText = "Вы Погибли!";
                 BoardNameText = "Имя";
                 BoardScoreText = "Очки";
-                btnUseExtraLife.text = "Исп. Доп. Жизнь ";
+                btnUseExtraLife = new QuestButton(font, "Исп. Доп. Жизнь", 150);
         }
     }
 
@@ -372,7 +369,7 @@ public class ScreenGame implements Screen {
     }
     public void clearTableOfRecords() {
         for (Player p: players) {
-            p.name = "noname";
+            p.name = "Noname";
             p.score = 0;
         }
         saveTableOfRecords();
@@ -382,17 +379,6 @@ public class ScreenGame implements Screen {
         if(TimeUtils.millis()>timeLastSpawnGround+timeIntervalSpawnGround && !isGameOver) {
             grounds.add(new Ground(1600, 0));
             timeLastSpawnGround = TimeUtils.millis();
-        }
-    }
-
-    private void changePhaseOfStar(Star s){
-        if(TimeUtils.millis()>timeLastPhaseStar+timePhaseIntervalStar && !isGameOver) {
-            if(s.phase!=s.nPhases-1) s.phase++;
-            else {
-                s.isDead = true;
-                s.phase = s.nPhases-1;
-            }
-            timeLastPhaseStar = TimeUtils.millis();
         }
     }
 
@@ -426,12 +412,8 @@ public class ScreenGame implements Screen {
     }
 
 
-    private String groundFile(int number) {
-        return "ground"+Integer.toString(number)+".png";
-    }
-
-    private String starFile(int number) {
-        return "star"+Integer.toString(number)+".png";
+    private String groundFile(int number, int type) {
+        return "ground"+number+"type"+type+".png";
     }
 
     class JumpQuestInputProcessor implements InputProcessor {

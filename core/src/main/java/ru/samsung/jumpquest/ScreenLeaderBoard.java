@@ -114,14 +114,14 @@ public class ScreenLeaderBoard implements Screen {
                 LeaderBoardText = "Leader Board";
                 NameOfBoardText = "Name";
                 ScoreOfBoardText = "Score";
-                btnClear.text = "Clear";
-                btnBack.text = "Back"; break;
+                btnClear = new QuestButton(font, "Clear",300);
+                btnBack = new QuestButton(font, "Back", 150); break;
             case russianLanguage:
                 LeaderBoardText = "Рекорды";
                 NameOfBoardText = "Имя";
                 ScoreOfBoardText = "Очки";
-                btnClear.text = "Чистка";
-                btnBack.text = "Назад";
+                btnClear = new QuestButton(font, "Чистка",300);
+                btnBack = new QuestButton(font, "Назад",150);
         }
     }
 }
