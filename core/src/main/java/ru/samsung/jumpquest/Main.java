@@ -59,6 +59,8 @@ public class Main extends Game {
         screenAbout = new ScreenAbout(this);
         screenStore = new ScreenStore(this);
         setScreen(screenMenu);
+
+        screenSettings.loadSettings();
     }
 
     @Override

@@ -38,6 +38,7 @@ public class ScreenGame implements Screen {
     Texture imgBG;
     Texture imgBG2;
     Texture imgStar;
+    Texture imgStar2X;
     Texture whitePixel;
     Texture heartTexture;
 
@@ -58,6 +59,7 @@ public class ScreenGame implements Screen {
 
     List<Ground> grounds = new ArrayList<>();
     List<Star> stars = new ArrayList<>();
+    List<Star2X> stars2x = new ArrayList<>();
     Sky[] sky = new Sky[2];
 
     public float fixedAddedSpeed = 0;
@@ -68,10 +70,14 @@ public class ScreenGame implements Screen {
     private boolean hasGameEnded = false;
     private long timeLastScore, timeIntervalScore = 200;
     private long timeLastSpawnStar, timeIntervalSpawnStar = 5000;
+    private long timeLastSpawnStar2X, timeIntervalSpawnStar2X = 10000;
+    private long timeMultiplyStar2X, timeMultiplyStar2XDuration = 7000;
     private long timeLastSpeedUp, timeIntervalSpeedUp = 2000;
     public boolean extraLife = false;
     private boolean extraLifeUsed = false;
     public int multiplier = 1, multiplierPrice = 2000;
+    private int newMultiplier;
+    private boolean isStar2XActivated = false;
 
     public Player[] players = new Player[11];
 
@@ -92,7 +98,9 @@ public class ScreenGame implements Screen {
         whitePixel = new Texture(pixmap);
 
         imgStar = new Texture("star1.png");
+        imgStar2X = new Texture("2xstar.png");
         heartTexture = new Texture("heart.png");
+
         for (int i = 0; i < imgJohn.length; i++) {
             imgJohn[i] = new Texture(i==0?"run3.png":"run2.png");
         }
@@ -122,6 +130,7 @@ public class ScreenGame implements Screen {
         for (int i = 1; i < imgGrounds.length; i++) {
             imgGrounds[i] = new Texture(groundFile(i, typeOfWeather));
         }
+        newMultiplier = 2 * multiplier;
         loadLanguageText();
         Gdx.input.setInputProcessor(new JumpQuestInputProcessor());
         gameStart();
@@ -129,7 +138,6 @@ public class ScreenGame implements Screen {
 
     @Override
     public void render(float delta) {
-        System.out.println(typeOfWeather);
         //касания
         if(Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -161,9 +169,11 @@ public class ScreenGame implements Screen {
         spawnGround();
         //speedUp();
         spawnStar();
+        spawnStar2X();
         score();
         for(Ground g:grounds) g.move();
         for(Star s:stars) s.move();
+        for(Star2X x:stars2x) x.move();
         for(int i = stars.size()-1; i >= 0; i--) {
             if(stars.get(i).outOfScreen()) {
                 stars.remove(i);
@@ -175,7 +185,22 @@ public class ScreenGame implements Screen {
                 stars.remove(i);
             }
         }
+        for(int i = stars2x.size()-1; i >= 0; i--) {
+            if(stars2x.get(i).outOfScreen()) {
+                stars2x.remove(i);
+                break;
+            }
+            if(stars2x.get(i).overlap(john)) {
+                timeMultiplyStar2X = TimeUtils.millis();
+                isStar2XActivated = true;
+                starSound.play();
+                stars2x.remove(i);
+            }
+        }
         john.move();
+        if(isStar2XActivated) {
+            multiplyOnStar2X();
+        }
         for (Ground g:grounds) {
             switch(g.type) {
                 case 1:
@@ -220,6 +245,9 @@ public class ScreenGame implements Screen {
         }
         for (Star s:stars) {
             batch.draw(imgStar, s.scrX(), s.scrY(), s.width, s.height);
+        }
+        for (Star2X x:stars2x) {
+            batch.draw(imgStar2X, x.scrX(), x.scrY(), x.width, x.height);
         }
 
 
@@ -311,6 +339,11 @@ public class ScreenGame implements Screen {
         john = new John(300, 500);
         grounds.clear();
         stars.clear();
+        stars2x.clear();
+        if(isStar2XActivated) {
+            isStar2XActivated = false;
+            multiplier /= 2;
+        }
         isGameOver = false;
         grounds.add(new Ground(300, 0));
         grounds.add(new Ground(900, 0));
@@ -386,6 +419,22 @@ public class ScreenGame implements Screen {
         if(TimeUtils.millis()>timeLastSpawnStar+timeIntervalSpawnStar && !isGameOver) {
             stars.add(new Star(1600, 1000));
             timeLastSpawnStar = TimeUtils.millis();
+        }
+    }
+
+    private void spawnStar2X(){
+        if(TimeUtils.millis()>timeLastSpawnStar2X+timeIntervalSpawnStar2X && !isGameOver) {
+            stars2x.add(new Star2X(1900, 900));
+            timeLastSpawnStar2X = TimeUtils.millis();
+        }
+    }
+
+    private void multiplyOnStar2X(){
+        if(TimeUtils.millis()>timeMultiplyStar2X+timeMultiplyStar2XDuration && !isGameOver) {
+            isStar2XActivated = false;
+            multiplier /= 2;
+        } else {
+            multiplier = newMultiplier;
         }
     }
 

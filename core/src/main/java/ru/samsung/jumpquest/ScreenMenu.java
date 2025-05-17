@@ -53,7 +53,6 @@ public class ScreenMenu implements Screen {
     public void show() {
         loadLanguageText();
         loadAllScore();
-        main.screenSettings.loadSettings();
         main.screenStore.loadStore();
     }
 
