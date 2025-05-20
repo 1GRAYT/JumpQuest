@@ -101,7 +101,7 @@ public class ScreenAbout implements Screen {
                 btnBack = new QuestButton(font, "Back", 158); break;
             case russianLanguage:
                 AboutText = "Об Игре";
-                MadeText = "Сделано Ильей Гумаровым";
+                MadeText = "Сделано Ильей Гумаровым\n\nУправление:\n\nДля того, чтобы пргыгнуть, удерживайте определённое время экран(сила прыжка отображается сверху) и потом отпустите";
                 btnBack = new QuestButton(font, "Назад", 158);
         }
     }

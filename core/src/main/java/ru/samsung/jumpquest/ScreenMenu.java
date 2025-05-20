@@ -24,6 +24,7 @@ public class ScreenMenu implements Screen {
     public BitmapFont font;
 
     Texture imgBG;
+    Texture jumpQuestLogo;
 
     QuestButton btnGame;
     QuestButton btnSettings;
@@ -40,13 +41,14 @@ public class ScreenMenu implements Screen {
         font = main.font;
 
         imgBG = new Texture("bgmenu.png");
+        jumpQuestLogo = new Texture("jumpquestlogo.png");
 
-        btnGame = new QuestButton(font, "Play", 250, 1100);
-        btnSettings = new QuestButton(font, "Settings", 250, 950);
-        btnLeaderBoard = new QuestButton(font, "LeaderBoard", 250, 800);
-        btnStore = new QuestButton(font, "Store", 250, 650);
-        btnAbout = new QuestButton(font, "About", 250, 500);
-        btnExit = new QuestButton(font, "Exit", 250, 350);
+        btnGame = new QuestButton(font, "Play", 250, 1050);
+        btnSettings = new QuestButton(font, "Settings", 250, 900);
+        btnLeaderBoard = new QuestButton(font, "LeaderBoard", 250, 750);
+        btnStore = new QuestButton(font, "Store", 250, 600);
+        btnAbout = new QuestButton(font, "About", 250, 450);
+        btnExit = new QuestButton(font, "Exit", 250, 300);
     }
 
     @Override
@@ -86,7 +88,8 @@ public class ScreenMenu implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        font.draw(batch, "Jump Quest", 0, 1400, SCR_WIDTH, Align.center, true);
+        batch.draw(jumpQuestLogo, 250, 1050, 400, 400);
+        //font.draw(batch, "Jump Quest", 0, 1400, SCR_WIDTH, Align.center, true);
         btnGame.font.draw(batch, btnGame.text, btnGame.x, btnGame.y);
         btnSettings.font.draw(batch, btnSettings.text, btnSettings.x, btnSettings.y);
         btnLeaderBoard.font.draw(batch, btnLeaderBoard.text, btnLeaderBoard.x, btnLeaderBoard.y);
