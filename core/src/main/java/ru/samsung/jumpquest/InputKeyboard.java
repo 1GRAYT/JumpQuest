@@ -53,7 +53,7 @@ public class InputKeyboard {
         imgKeyEnter = new TextureRegion(imgAtlasKeys, 256*4, 0, 256, 256);
         imgKeyCL = new TextureRegion(imgAtlasKeys, 256*5, 0, 256, 256);
         imgKeySW = new TextureRegion(imgAtlasKeys, 256*6, 0, 256, 256);
-        imgBackground = new TextureRegion(createSolidColorTexture(new Color(0.15f, 0.1f, 0.08f, 1)));
+        imgBackground = new TextureRegion(backgroundColor(new Color(0.15f, 0.1f, 0.08f, 1)));
 
         keyboardWidth = scrWidth/21f*20;
         keyboardHeight = scrHeight/5f*3;
@@ -64,7 +64,7 @@ public class InputKeyboard {
         createKBD();
     }
 
-    private Texture createSolidColorTexture(Color color) {
+    private Texture backgroundColor(Color color) {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();

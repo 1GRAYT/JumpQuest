@@ -28,6 +28,9 @@ public class ScreenSettings implements Screen {
     private String LanguageText;
     public int language;
 
+    private boolean isEnteringName;
+    private String cheatCode;
+
     private InputKeyboard keyboard;
 
     Texture imgBG;
@@ -35,6 +38,7 @@ public class ScreenSettings implements Screen {
     QuestButton btnPlayerName;
     QuestButton btnEnglish;
     QuestButton btnRussian;
+    QuestButton btnCheat;
     QuestButton btnBack;
 
     public ScreenSettings(Main main) {
@@ -53,6 +57,7 @@ public class ScreenSettings implements Screen {
         btnPlayerName = new QuestButton(font, "Name: "+main.player.name, 100, 1250);
         btnEnglish = new QuestButton(getFont(language), "English", 150, 950);
         btnRussian = new QuestButton(getFont(language), "Русский", 150, 800);
+        btnCheat = new QuestButton(font, "*", 0, 350);
         btnBack = new QuestButton(font, "Back", 200);
     }
 
@@ -70,12 +75,17 @@ public class ScreenSettings implements Screen {
 
             if(keyboard.isKeyboardShow) {
                 if(keyboard.touch(touch)) {
-                    main.player.name = keyboard.getText();
-                    btnPlayerName.setText("Name: " + main.player.name);
-                    loadLanguageText();
+                    if(isEnteringName) {
+                        main.player.name = keyboard.getText();
+                        btnPlayerName.setText("Name: " + main.player.name);
+                        loadLanguageText();
+                    } else {
+                        cheatCode = keyboard.getText();
+                    }
                 }
             } else {
                 if (btnPlayerName.hit(touch)) {
+                    isEnteringName = true;
                     keyboard.start();
                 }
 
@@ -93,11 +103,20 @@ public class ScreenSettings implements Screen {
                     saveSettings();
                 }
 
+                if (btnCheat.hit(touch)) {
+                    isEnteringName = false;
+                    keyboard.start();
+                }
+
                 if (btnBack.hit(touch)) {
                     saveSettings();
                     main.setScreen(main.screenMenu);
                 }
             }
+        }
+
+        if("gumar".equals(cheatCode)) {
+            main.screenGame.multiplier = 1000;
         }
 
         batch.setProjectionMatrix(camera.combined);
@@ -108,6 +127,7 @@ public class ScreenSettings implements Screen {
         btnPlayerName.font.draw(batch, btnPlayerName.text, btnPlayerName.x, btnPlayerName.y);
         btnEnglish.font.draw(batch, btnEnglish.text, btnEnglish.x, btnEnglish.y);
         btnRussian.font.draw(batch, btnRussian.text, btnRussian.x, btnRussian.y);
+        btnCheat.font.draw(batch, btnCheat.text, btnCheat.x, btnCheat.y);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         keyboard.draw(batch);
         batch.end();
