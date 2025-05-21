@@ -2,8 +2,6 @@ package ru.samsung.jumpquest;
 
 import static ru.samsung.jumpquest.Main.*;
 
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class John extends Object{
@@ -13,7 +11,7 @@ public class John extends Object{
     public boolean isOnGround = false;
     public float jumpForce = 0;
     private float maxJumpForce = 30f;
-    private float chargeSpeed = 1f;
+    private float speedOfCharging = 1f;
     private long touchStartTime = 0;
     public boolean isCharging = false;
     public John(float x, float y) {
@@ -29,8 +27,8 @@ public class John extends Object{
         changePhase();
         outOfScreen();
 
-        if (isCharging && isOnGround) {
-            jumpForce += chargeSpeed;
+        if (isCharging) {
+            jumpForce += speedOfCharging;
             if (jumpForce > maxJumpForce) jumpForce = maxJumpForce;
         }
     }
@@ -58,10 +56,9 @@ public class John extends Object{
     }
 
     public void startCharging() {
-        if (isOnGround) {
-            isCharging = true;
-            touchStartTime = TimeUtils.millis();
-        }
+        isCharging = true;
+        touchStartTime = TimeUtils.millis();
+
     }
 
     public void endJump() {
@@ -73,14 +70,5 @@ public class John extends Object{
             isOnGround = false;
             jumpForce = 0;
         }
-    }
-
-    public void stop() {
-        vx = 0;
-        vy = 0;
-    }
-
-    public void dead() {
-        x = -10000;
     }
 }

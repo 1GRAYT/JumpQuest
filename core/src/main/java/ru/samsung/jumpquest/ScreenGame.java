@@ -152,7 +152,7 @@ public class ScreenGame implements Screen {
                 for(Player p:players) {
                     if(p.score == main.player.score && p.name == main.player.name) {
                         p.score = 0;
-                        p.name = "noname";
+                        p.name = "Noname";
                         sortTableOfRecords();
                         saveTableOfRecords();
                     }
@@ -492,7 +492,7 @@ public class ScreenGame implements Screen {
 
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            if(john.isCharging) jumpSound.play();
+            if(john.isCharging && john.isOnGround) jumpSound.play();
             john.endJump();
             return false;
         }

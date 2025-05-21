@@ -48,12 +48,12 @@ public class ScreenStore implements Screen {
         font = main.font;
         fontGray = main.fontGray;
 
-        imgBG = new Texture("bgstore.png");
+        imgBG = new Texture("bgstore2.png");
 
-        btnBuyExtraLife = new QuestButton(fontBuy(main.screenGame.extraLife), extraLifeBought(main.screenGame.extraLife, extraLifePrice), 1200);
-        btnBuyMultiplier = new QuestButton(font, multiplierText(main.screenGame.multiplier, main.screenGame.multiplierPrice), 1050);
-        btnBuySummer = new QuestButton(fontBuy(main.screenGame.typeOfWeather == summerType), summerText(main.screenGame.typeOfWeather, summerPrice), 900);
-        btnBuyWinter = new QuestButton(fontBuy(main.screenGame.typeOfWeather == winterType), winterText(main.screenGame.typeOfWeather, winterPrice), 750);
+        btnBuyExtraLife = new QuestButton(fontBuy(main.screenGame.extraLife), extraLifeBought(main.screenGame.extraLife, extraLifePrice), 100, 1075);
+        btnBuyMultiplier = new QuestButton(font, multiplierText(main.screenGame.multiplier, main.screenGame.multiplierPrice), 100,900);
+        btnBuySummer = new QuestButton(fontBuy(main.screenGame.typeOfWeather == summerType), summerText(main.screenGame.typeOfWeather, summerPrice), 100, 750);
+        btnBuyWinter = new QuestButton(fontBuy(main.screenGame.typeOfWeather == winterType), winterText(main.screenGame.typeOfWeather, winterPrice), 100, 600);
         btnBack = new QuestButton(font, "Back", 158);
     }
 

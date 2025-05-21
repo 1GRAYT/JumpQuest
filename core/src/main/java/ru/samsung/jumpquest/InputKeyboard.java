@@ -1,5 +1,7 @@
 package ru.samsung.jumpquest;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,7 +35,7 @@ public class InputKeyboard {
     private final Texture imgAtlasKeys;
     private final TextureRegion imgEditText;
     private final TextureRegion imgKeyUP, imgKeyDown;
-    private final TextureRegion imgKeyBS, imgKeyEnter, imgKeyCL, imgKeySW;
+    private final TextureRegion imgKeyBS, imgKeyEnter, imgKeyCL, imgKeySW, imgBackground;
 
     private long timeStartPressKey, timeDurationPressKey = 150;
     private int keyPressed = -1;
@@ -51,6 +53,7 @@ public class InputKeyboard {
         imgKeyEnter = new TextureRegion(imgAtlasKeys, 256*4, 0, 256, 256);
         imgKeyCL = new TextureRegion(imgAtlasKeys, 256*5, 0, 256, 256);
         imgKeySW = new TextureRegion(imgAtlasKeys, 256*6, 0, 256, 256);
+        imgBackground = new TextureRegion(createSolidColorTexture(new Color(0.15f, 0.1f, 0.08f, 1)));
 
         keyboardWidth = scrWidth/21f*20;
         keyboardHeight = scrHeight/5f*3;
@@ -59,6 +62,15 @@ public class InputKeyboard {
         keyWidth = keyboardWidth/13;
         keyHeight = keyboardHeight/5;
         createKBD();
+    }
+
+    private Texture createSolidColorTexture(Color color) {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
     private void createKBD(){
@@ -93,6 +105,12 @@ public class InputKeyboard {
 
     public void draw(SpriteBatch batch){
         if(isKeyboardShow) {
+            float pad = 30;
+            batch.draw(imgBackground,
+                x - pad,
+                y - keyboardHeight - pad,
+                keyboardWidth + pad*2,
+                keyboardHeight + keyHeight);
             for (int i = 0; i < keys.size; i++) {
                 drawImgKey(batch, i, keys.get(i).x, keys.get(i).y, keys.get(i).width, keys.get(i).height);
             }
@@ -157,7 +175,6 @@ public class InputKeyboard {
                     timeStartPressKey = TimeUtils.millis();
                 }
             }
-            // окончание редактирования ввода (нажата кнопка enter)
             if (endOfEdit) {
                 endOfEdit = false;
                 isKeyboardShow = false;
@@ -167,49 +184,44 @@ public class InputKeyboard {
         return false;
     }
 
-    // обработка нажатия кнопок
     private void setText(int i){
         switch (letters.charAt(i)) {
-            case '~': // backspace
+            case '~':
                 if(!text.isEmpty()) text = text.substring(0, text.length() - 1);
                 break;
-            case '^': // enter
+            case '^':
                 if(text.isEmpty()) break;
                 endOfEdit = true;
                 break;
-            case '`': // caps lock
+            case '`':
                 if(letters.charAt(12) == 'Q') letters = LETTERS_EN_LOW;
                 else if(letters.charAt(12) == 'q') letters = LETTERS_EN_CAPS;
                 else if(letters.charAt(12) == 'Й') letters = LETTERS_RU_LOW;
                 else if(letters.charAt(12) == 'й') letters = LETTERS_RU_CAPS;
                 setCharsKBD();
                 break;
-            case '|': // ru/en switcher
+            case '|':
                 if(letters.charAt(12) == 'й') letters = LETTERS_EN_LOW;
                 else if(letters.charAt(12) == 'Й') letters = LETTERS_EN_CAPS;
                 else if(letters.charAt(12) == 'q') letters = LETTERS_RU_LOW;
                 else if(letters.charAt(12) == 'Q') letters = LETTERS_RU_CAPS;
                 setCharsKBD();
                 break;
-            default: // ввод символов
+            default:
                 if(text.length() < enterTextLength) text += letters.charAt(i);
-                //if(text.length() == 1 && letters.equals(LETTERS_EN_CAPS)) letters = LETTERS_EN_LOW;
-                //if(text.length() == 1 && letters.equals(LETTERS_RU_CAPS)) letters = LETTERS_RU_LOW;
                 setCharsKBD();
         }
     }
 
-    // выдача отредактированного текста
     public String getText() {
         return text;
     }
 
-    // класс отдельной кнопки виртуальной клавиатуры
     private class Key {
         float x, y;
         float width, height;
-        char letter; // символ на кнопке
-        float letterX, letterY; // координаты вывода символа
+        char letter;
+        float letterX, letterY;
 
         private Key (float x, float y, float width, float height, char letter) {
             this.x = x;
@@ -235,5 +247,6 @@ public class InputKeyboard {
 
     public void dispose(){
         imgAtlasKeys.dispose();
+        imgBackground.getTexture().dispose();
     }
 }

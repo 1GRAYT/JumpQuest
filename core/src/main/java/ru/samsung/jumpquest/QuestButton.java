@@ -12,6 +12,16 @@ public class QuestButton {
     float x, y;
     float width, height;
 
+    public QuestButton(BitmapFont font, String text, float x, float y, boolean isRight) {
+        this.font = font;
+        this.text = text;
+        GlyphLayout glyphLayout = new GlyphLayout(font, text);
+        width = glyphLayout.width;
+        height = glyphLayout.height;
+        this.x = isRight ? (SCR_WIDTH - width - x) : x;
+        this.y = y;
+    }
+
     public QuestButton(BitmapFont font, String text, float x, float y) {
         this.font = font;
         this.text = text;
@@ -21,6 +31,7 @@ public class QuestButton {
         width = glyphLayout.width;
         height = glyphLayout.height;
     }
+
 
     public QuestButton(BitmapFont font, String text, float y) {
         this.font = font;
