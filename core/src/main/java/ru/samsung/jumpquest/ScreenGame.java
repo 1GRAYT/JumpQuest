@@ -279,7 +279,7 @@ public class ScreenGame implements Screen {
             font.draw(batch, BoardScoreText, 500, 1080, 200, Align.right, true);
             for (int i = 0; i < players.length-1; i++) {
                 font.draw(batch, players[i].name, 100, 1000 - 70 * i);
-                font.draw(batch, "" + players[i].score, 500, 1000 - 70 * i, 200, Align.right, true);
+                font.draw(batch, "" + players[i].score, 500, 1000 - 70 * i, 300, Align.right, true);
             }
             if(extraLife) {
                 btnUseExtraLife.font.draw(batch, btnUseExtraLife.text, btnUseExtraLife.x, btnUseExtraLife.y);
