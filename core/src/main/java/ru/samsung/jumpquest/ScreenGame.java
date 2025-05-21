@@ -484,7 +484,7 @@ public class ScreenGame implements Screen {
 
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            john.startCharging();
+            if(!isGameOver) john.startCharging();
             touch.set(screenX, screenY, 0);
             camera.unproject(touch);
             return false;
