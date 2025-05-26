@@ -79,6 +79,7 @@ public class ScreenSettings implements Screen {
                         main.player.name = keyboard.getText();
                         btnPlayerName.setText("Name: " + main.player.name);
                         loadLanguageText();
+                        isEnteringName = false;
                     } else {
                         cheatCode = keyboard.getText();
                     }
@@ -117,6 +118,10 @@ public class ScreenSettings implements Screen {
 
         if("gumar".equals(cheatCode)) {
             main.screenGame.multiplier = 1000;
+        } else if("liven".equals(cheatCode)) {
+            main.player.name = "Изгой";
+            btnPlayerName.setText("Name: " + main.player.name);
+            loadLanguageText();
         }
 
         batch.setProjectionMatrix(camera.combined);
